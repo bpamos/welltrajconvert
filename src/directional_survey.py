@@ -26,11 +26,7 @@ class Survey:
         convert n/s and e/w deviations and their n/s, e/w ids to x and y offsets
         and replace the original data with new updated directional survey points
         """
-        df = pd.DataFrame({'wellId':self.directional_survey_points.wellId,
-                          'md':self.directional_survey_points.md,
-                          'inc':self.directional_survey_points.inc,
-                          'azim':self.directional_survey_points.azim,
-                          'e_w_deviation':self.directional_survey_points.e_w_deviation,
+        df = pd.DataFrame({'e_w_deviation':self.directional_survey_points.e_w_deviation,
                          'e_w':self.directional_survey_points.e_w,
                          'n_s_deviation':self.directional_survey_points.n_s_deviation,
                          'n_s':self.directional_survey_points.n_s})
