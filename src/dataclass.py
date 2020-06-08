@@ -51,12 +51,12 @@ class DirectionalSurvey:
     e_w: np.array = field(default=None, metadata={'unit': 'str'})
     y_offset: np.array = field(default=None, metadata={'unit': 'float'})
     surface_latitude: np.array = field(default=None, metadata={'unit': 'float'})
-    surface_longitude: np.array = field(default=None, metadata={'unit': 'float'}
+    surface_longitude: np.array = field(default=None, metadata={'unit': 'float'})
     surface_x: np.array = field(default=None, metadata={'unit': 'float'})
-    surface_y: np.array = field(default=None, metadata={'unit': 'float'}
-    x_points: np.array = field(default=None, metadata={'unit': 'float'}
-    y_points: np.array = field(default=None, metadata={'unit': 'float'}
-    zone_number: np.array = field(default=None, metadata={'unit': 'int'}
-    zone_letter: np.array = field(default=None, metadata={'unit': 'str'}
-    latitude_points: np.array = field(default=None, metadata={'unit': 'float'}
+    surface_y: np.array = field(default=None, metadata={'unit': 'float'})
+    x_points: np.array = field(default=None, metadata={'unit': 'float'})
+    y_points: np.array = field(default=None, metadata={'unit': 'float'})
+    zone_number: np.array = field(default=None, metadata={'unit': 'int'})
+    zone_letter: np.array = field(default=None, metadata={'unit': 'str'})
+    latitude_points: np.array = field(default=None, metadata={'unit': 'float'})
     longitude_points: np.array = field(default=None, metadata={'unit': 'float'})
