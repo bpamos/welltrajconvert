@@ -23,12 +23,14 @@ class DirectionalSurvey:
     y_offset: e_w_devitaion with its east or west id conversion
     surface_latitude: surface hole latitude
     surface_longitude: surface hole longitude
-    X_Adjusted: 
-    Y_Adjusted: 
-    ZoneNumber: 
-    ZoneLetter: 
-    Lat_adjusted: 
-    Lon_adjusted: 
+    surface_x
+    surface_y
+    x_points: 
+    y_points: 
+    zone_number: 
+    zone_letter: 
+    latitude_points: 
+    longitude_points: 
 
     Returns:
     dataclass Directional Survey object
@@ -49,10 +51,12 @@ class DirectionalSurvey:
     e_w: np.array = field(default=None, metadata={'unit': 'str'})
     y_offset: np.array = field(default=None, metadata={'unit': 'float'})
     surface_latitude: np.array = field(default=None, metadata={'unit': 'float'})
-    surface_longitude: np.array = field(default=None, metadata={'unit': 'float'},
-    X_Adjusted: np.array = field(default=None, metadata={'unit': 'float'},
-    Y_Adjusted: np.array = field(default=None, metadata={'unit': 'float'},
-    ZoneNumber: np.array = field(default=None, metadata={'unit': 'int'},
-    ZoneLetter: np.array = field(default=None, metadata={'unit': 'str'},
-    Lat_adjusted: np.array = field(default=None, metadata={'unit': 'float'},
-    Lon_adjusted: np.array = field(default=None, metadata={'unit': 'float'})
+    surface_longitude: np.array = field(default=None, metadata={'unit': 'float'}
+    surface_x: np.array = field(default=None, metadata={'unit': 'float'})
+    surface_y: np.array = field(default=None, metadata={'unit': 'float'}
+    x_points: np.array = field(default=None, metadata={'unit': 'float'}
+    y_points: np.array = field(default=None, metadata={'unit': 'float'}
+    zone_number: np.array = field(default=None, metadata={'unit': 'int'}
+    zone_letter: np.array = field(default=None, metadata={'unit': 'str'}
+    latitude_points: np.array = field(default=None, metadata={'unit': 'float'}
+    longitude_points: np.array = field(default=None, metadata={'unit': 'float'})
