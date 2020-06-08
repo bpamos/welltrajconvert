@@ -22,7 +22,9 @@ def get_directional_survey_dataclass(survey_data_list):
     survey_fields_list = ['wellId', 'md', 'inc', 'azim', 'tvd',
                               'n_s_deviation', 'n_s', 'x_offset', 
                               'e_w_deviation', 'e_w', 'y_offset',
-                              'surface_latitude', 'surface_longitude']
+                              'surface_latitude', 'surface_longitude',
+                              'surface_x','surface_y','x_points','y_points',
+                              'zone_number','zone_letter','latitude_points','longitude_points']
     survey_dict = {}
     for field_name in survey_fields_list:
         # get available dict fields from production data
