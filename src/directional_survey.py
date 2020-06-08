@@ -73,3 +73,31 @@ class Survey:
         print('converted surface x and y to surface lat and long')
 
         return df
+
+    def get_xy_points(self):
+
+        df = pd.DataFrame({'surface_x':self.directional_survey_points.surface_x,
+                        'surface_y':self.directional_survey_points.surface_y,
+                        'x_offset':self.directional_survey_points.x_offset,
+                        'y_offset':self.directional_survey_points.y_offset, })
+
+            # create X and Y columns for each deviation point per uwi
+        # add the x and y offset to the surface x and y for each uwi
+        df['x_points'] = df['surface_x']+(df['x_offset']*0.3048)
+        df['y_points'] = df['surface_y']+(df['y_offset']*0.3048)
+
+        return df
+
+
+    def get_lat_lon_points(self):
+
+        df = pd.DataFrame({'x_points':self.directional_survey_points.x_points,
+                    'y_points':self.directional_survey_points.y_points,
+                    'zone_number':self.directional_survey_points.zone_number,
+                    'zone_letter':self.directional_survey_points.zone_letter })
+
+        # convert adjusted x and y back to lat long
+        df[['latitude_points','longitude_points']] = df[['x_points','y_points','zone_number','zone_letter']].apply(get_latlon , axis=1)
+        print('converted adjusted x and y back to lat long')
+
+        return df  
