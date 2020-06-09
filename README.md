@@ -1,6 +1,6 @@
 # directional-survey-converter
-Convert directional surveys to their respective latitude longitude survey points
 
+Convert directional surveys to their respective latitude longitude survey points
 
 
 
@@ -33,12 +33,12 @@ Using Anaconda consists of the following:
 ---
 
 
-**Now, we're ready to create our local environment!**
+**Now, we're ready to create our local environment**
 
-1. Clone the repository, and navigate to the downloaded folder. This may take a minute or two to clone due to the included image data.
+1. Clone the repository, and navigate to the downloaded folder.
 
 
-2. Create (and activate) a new environment, named `deep-learning` with Python 3.6. If prompted to proceed with the install `(Proceed [y]/n)` type y.
+2. Create (and activate) a new environment, named `dir-survey` with Python 3.6. If prompted to proceed with the install `(Proceed [y]/n)` type y.
 
 	- __Linux__ or __Mac__: 
 	```
