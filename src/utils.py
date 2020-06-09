@@ -1,6 +1,7 @@
 import pandas as pd
 import utm
 from src.dataclass import *
+from src.directional_survey import *
 
 
 def get_directional_survey_dataclass(survey_data_list):
@@ -53,3 +54,5 @@ def get_latlon(row):
     
     tup = utm.to_latlon(row.iloc[0],row.iloc[1],row.iloc[2],row.iloc[3])
     return pd.Series(tup[:2])
+
+
