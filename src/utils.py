@@ -26,6 +26,7 @@ def get_directional_survey_dataclass(survey_data_list):
                               'surface_latitude', 'surface_longitude',
                               'surface_x','surface_y','x_points','y_points',
                               'zone_number','zone_letter','latitude_points','longitude_points']
+                              
     survey_dict = {}
     for field_name in survey_fields_list:
         # get available dict fields from production data
