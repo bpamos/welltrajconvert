@@ -129,11 +129,9 @@ class Survey:
 
         # create X and Y columns for each deviation point
         # add the x and y offset from the surface x and y for each point * meters conversion
-        #df['x_points'] = df['surface_x']+(df['x_offset']*0.3048)
-        #df['y_points'] = df['surface_y']+(df['y_offset']*0.3048)
-
-        df['x_points'] = df['surface_x']+(df['x_offset'])
-        df['y_points'] = df['surface_y']+(df['y_offset'])
+        # TODO add meters or feet conversion. Currenlty assumes offset feet and converts to meters
+        df['x_points'] = df['surface_x']+(df['x_offset']*0.3048)
+        df['y_points'] = df['surface_y']+(df['y_offset']*0.3048)
 
         return df
 
@@ -240,3 +238,81 @@ class Survey:
         survey_df = pd.merge(survey_df,lat_lon_points,left_index=True,right_index=True)
 
         return survey_df
+
+
+
+    def minimum_curvature_algo(self):
+        #Following are the calculations for Minimum Curvature Method 
+
+
+        survey_df = pd.DataFrame({'wellId':self.directional_survey_points.wellId,
+                        'md':self.directional_survey_points.md,
+                        'inc':self.directional_survey_points.inc,
+                        'azim':self.directional_survey_points.azim,
+                        'surface_latitude':self.directional_survey_points.surface_latitude,
+                        'surface_longitude':self.directional_survey_points.surface_longitude })
+
+
+        #Convert to Radians
+
+        df = survey_df.reset_index()
+
+        df['inc_rad'] = df['inc']*0.0174533 #converting to radians
+        df['azim_rad'] =df['azim']*0.0174533 #converting to radians
+
+        # ************************************************ BETA CALC 
+        df['beta'] = np.arccos(
+                    np.cos((df['inc_rad']) - (df['inc_rad'].shift(1))) - \
+                    (np.sin(df['inc_rad'].shift(1)) * np.sin(df['inc_rad']) * \
+                    (1-np.cos(df['azim_rad'] - df['azim_rad'].shift(1)))))
+
+        df['beta'] = df['beta'].fillna(0)
+
+        # *************************************************BETA CALC END
+
+        #DogLeg Severity per 100 ft
+
+        df['dls_sub'] = (df['beta'] * 57.2958 * 100)/(df['md']-df['md'].shift(1))
+
+        # Calc RF
+        df['RF'] = np.where(df['beta']==0, 1, 2/df['beta'] * np.tan(df['beta']/2))
+
+
+        # ************************************************************** TVD CALC
+
+        df['tvd_sub'] = ((df['md']-df['md'].shift(1))/2) * \
+                        (np.cos(df['inc_rad'].shift(1)) + np.cos(df['inc_rad']))*df['RF']
+
+        df['tvd_sub'] = df['tvd_sub'].fillna(0)
+        df['tvd_sub_cum'] =  df['tvd_sub'].cumsum()
+
+        ### calculating NS
+        df['ns_sub'] = ((df['md']-df['md'].shift(1))/2) * \
+                        (
+                        np.sin(df['inc_rad'].shift(1)) * np.cos(df['azim_rad'].shift(1)) +
+                        np.sin(df['inc_rad']) * np.cos(df['azim_rad'])\
+                        ) * df['RF']
+
+        df['ns_sub'] = df['ns_sub'].fillna(0)
+        df['ns_sub_cum'] =  df['ns_sub'].cumsum()
+
+        ## calculating EW
+        df['ew_sub'] = ((df['md']-df['md'].shift(1))/2) * \
+                        (
+                        np.sin(df['inc_rad'].shift(1)) * \
+                        np.sin(df['azim_rad'].shift(1)) + \
+                        np.sin(df['inc_rad']) * np.sin(df['azim_rad'])\
+                        ) * df['RF']
+        df['ew_sub'] = df['ew_sub'].fillna(0)
+        df['ew_sub_cum'] =  df['ew_sub'].cumsum()
+
+        df['e_w_deviation'] = df['ew_sub_cum']
+        df['n_s_deviation'] = df['ns_sub_cum']
+
+
+        survey_dict = df.to_dict(orient='records')
+        survey_obj = Survey(survey_dict)
+
+        df = survey_obj.get_lat_lon_from_deviation()
+
+        return df
