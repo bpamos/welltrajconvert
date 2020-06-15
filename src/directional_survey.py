@@ -1,7 +1,10 @@
 
 import pandas as pd
-from src.utils import *
-from src.dataclass import *
+#from src.utils import *
+#from src.dataclass import *
+
+from utils import *
+from dataclass import *
 
 class Survey:
     """
@@ -131,6 +134,7 @@ class Survey:
         Returns:
         df with lat lon points and other calculated attributes
         """
+        # TODO: connect to original df to get extra columns
         survey_df = pd.DataFrame({'wellId':self.directional_survey_points.wellId,
                         'md':self.directional_survey_points.md,
                         'inc':self.directional_survey_points.inc,

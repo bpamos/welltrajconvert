@@ -31,7 +31,8 @@ class DirectionalSurvey:
     zone_number: 
     zone_letter: 
     latitude_points: 
-    longitude_points: 
+    longitude_points:
+    other:
 
     Returns:
     dataclass Directional Survey object
