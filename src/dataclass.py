@@ -21,6 +21,7 @@ class DirectionalSurvey:
     e_w_deviation: east west deviation (all postitive)
     e_w: east or west id (used to convert e_w_devitaion to positive or negative)
     y_offset: e_w_devitaion with its east or west id conversion
+    dls:
     surface_latitude: surface hole latitude
     surface_longitude: surface hole longitude
     surface_x
@@ -50,6 +51,7 @@ class DirectionalSurvey:
     e_w_deviation: np.array = field(default=None, metadata={'unit': 'float'})
     e_w: np.array = field(default=None, metadata={'unit': 'str'})
     y_offset: np.array = field(default=None, metadata={'unit': 'float'})
+    dls: np.array = field(default=None, metadata={'unit': 'float'})
     surface_latitude: np.array = field(default=None, metadata={'unit': 'float'})
     surface_longitude: np.array = field(default=None, metadata={'unit': 'float'})
     surface_x: np.array = field(default=None, metadata={'unit': 'float'})

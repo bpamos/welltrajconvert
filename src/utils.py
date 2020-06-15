@@ -22,7 +22,7 @@ def get_directional_survey_dataclass(survey_data_list):
     # DirectionalSurvey dataclass fields
     survey_fields_list = ['wellId', 'md', 'inc', 'azim', 'tvd',
                               'n_s_deviation', 'n_s', 'x_offset', 
-                              'e_w_deviation', 'e_w', 'y_offset',
+                              'e_w_deviation', 'e_w', 'y_offset', 'dls',
                               'surface_latitude', 'surface_longitude',
                               'surface_x','surface_y','x_points','y_points',
                               'zone_number','zone_letter','latitude_points','longitude_points']
@@ -57,3 +57,19 @@ def get_latlon(row):
     return pd.Series(tup[:2])
 
 
+def read_data(path_file):
+    """
+    
+    """
+    file = path_file
+    
+    df = pd.read_csv(file, sep=',')
+    
+    survey_dict = df.to_dict(orient='records')
+    
+    return survey_dict
+
+# # filter to dict to select keys and create list of dicts
+# keys = ['wellId','md','inc','azim','surface_latitude','surface_longitude','latitude_decimal_deg','longitude_decimal_deg']
+# survey_dict = [(dict((k, d[k]) for k in keys if k in d)) for d in my_data]
+# survey_dict

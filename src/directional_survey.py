@@ -194,6 +194,7 @@ class Survey:
                         'azim':self.directional_survey_points.azim,
                         'e_w_deviation':self.directional_survey_points.e_w_deviation,
                         'n_s_deviation':self.directional_survey_points.n_s_deviation,
+                        'dls':self.directional_survey_points.dls,
                         'surface_latitude':self.directional_survey_points.surface_latitude,
                         'surface_longitude':self.directional_survey_points.surface_longitude })
         else:
@@ -273,6 +274,7 @@ class Survey:
         #DogLeg Severity per 100 ft
 
         df['dls_sub'] = (df['beta'] * 57.2958 * 100)/(df['md']-df['md'].shift(1))
+        df['dls_sub'] = df['dls_sub'].fillna(0)
 
         # Calc RF
         df['RF'] = np.where(df['beta']==0, 1, 2/df['beta'] * np.tan(df['beta']/2))
@@ -308,11 +310,12 @@ class Survey:
 
         df['e_w_deviation'] = df['ew_sub_cum']
         df['n_s_deviation'] = df['ns_sub_cum']
+        df['dls'] = df['dls_sub']
 
 
         survey_dict = df.to_dict(orient='records')
+        #print(survey_dict)
         survey_obj = Survey(survey_dict)
-
         df = survey_obj.get_lat_lon_from_deviation()
 
         return df
