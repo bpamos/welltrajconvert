@@ -185,15 +185,13 @@ class Survey:
                         'surface_latitude':self.directional_survey_points.surface_latitude,
                         'surface_longitude':self.directional_survey_points.surface_longitude })
 
-
         #Convert to Radians
-
         df = survey_df.reset_index()
 
         df['inc_rad'] = df['inc']*0.0174533 #converting to radians
         df['azim_rad'] =df['azim']*0.0174533 #converting to radians
 
-        # ************************************************ BETA CALC 
+        # calculate beta (dog leg angle)
         df['beta'] = np.arccos(
                     np.cos((df['inc_rad']) - (df['inc_rad'].shift(1))) - \
                     (np.sin(df['inc_rad'].shift(1)) * np.sin(df['inc_rad']) * \
@@ -201,49 +199,43 @@ class Survey:
 
         df['beta'] = df['beta'].fillna(0)
 
-        # *************************************************BETA CALC END
+        # dog leg severity per 100 ft
+        df['dls'] = (df['beta'] * 57.2958 * 100)/(df['md']-df['md'].shift(1))
+        df['dls'] = df['dls'].fillna(0)
 
-        #DogLeg Severity per 100 ft
-
-        df['dls_sub'] = (df['beta'] * 57.2958 * 100)/(df['md']-df['md'].shift(1))
-        df['dls_sub'] = df['dls_sub'].fillna(0)
-
-        # Calc RF
-        df['RF'] = np.where(df['beta']==0, 1, 2/df['beta'] * np.tan(df['beta']/2))
+        # calculate ratio factor (radians)
+        df['rf'] = np.where(df['beta']==0, 1, 2/df['beta'] * np.tan(df['beta']/2))
 
 
-        # ************************************************************** TVD CALC
+        # calculate total vertical depth
+        df['tvd'] = ((df['md']-df['md'].shift(1))/2) * \
+                        (np.cos(df['inc_rad'].shift(1)) + np.cos(df['inc_rad']))*df['rf']
 
-        df['tvd_sub'] = ((df['md']-df['md'].shift(1))/2) * \
-                        (np.cos(df['inc_rad'].shift(1)) + np.cos(df['inc_rad']))*df['RF']
-
-        df['tvd_sub'] = df['tvd_sub'].fillna(0)
-        df['tvd_sub_cum'] =  df['tvd_sub'].cumsum()
+        df['tvd'] = df['tvd'].fillna(0)
+        df['tvd_cum'] =  df['tvd'].cumsum()
 
         ### calculating NS
-        df['ns_sub'] = ((df['md']-df['md'].shift(1))/2) * \
+        df['ns'] = ((df['md']-df['md'].shift(1))/2) * \
                         (
                         np.sin(df['inc_rad'].shift(1)) * np.cos(df['azim_rad'].shift(1)) +
                         np.sin(df['inc_rad']) * np.cos(df['azim_rad'])\
-                        ) * df['RF']
+                        ) * df['rf']
 
-        df['ns_sub'] = df['ns_sub'].fillna(0)
-        df['ns_sub_cum'] =  df['ns_sub'].cumsum()
+        df['ns'] = df['ns'].fillna(0)
+        df['ns_cum'] =  df['ns'].cumsum()
 
         ## calculating EW
-        df['ew_sub'] = ((df['md']-df['md'].shift(1))/2) * \
+        df['ew'] = ((df['md']-df['md'].shift(1))/2) * \
                         (
                         np.sin(df['inc_rad'].shift(1)) * \
                         np.sin(df['azim_rad'].shift(1)) + \
                         np.sin(df['inc_rad']) * np.sin(df['azim_rad'])\
-                        ) * df['RF']
-        df['ew_sub'] = df['ew_sub'].fillna(0)
-        df['ew_sub_cum'] =  df['ew_sub'].cumsum()
+                        ) * df['rf']
+        df['ew'] = df['ew'].fillna(0)
+        df['ew_cum'] =  df['ew'].cumsum()
 
-        df['e_w_deviation'] = df['ew_sub_cum']
-        df['n_s_deviation'] = df['ns_sub_cum']
-        df['dls'] = df['dls_sub']
-
+        df['e_w_deviation'] = df['ew_cum']
+        df['n_s_deviation'] = df['ns_cum']
 
         survey_dict = df.to_dict(orient='records')
         #print(survey_dict)
