@@ -1,11 +1,11 @@
 import pandas as pd
 import utm
 from pathlib import Path
-#from src.dataclass import *
-#from src.directional_survey import *
+from src.dataclass import *
+from src.directional_survey import *
 
-from dataclass import *
-from directional_survey import *
+#from dataclass import *
+#from directional_survey import *
 
 def get_directional_survey_dataclass(survey_data_list):
     """

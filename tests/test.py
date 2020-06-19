@@ -6,13 +6,13 @@
 
 import unittest
 #from pathlib import Path
-#from src.dataclass import *
-#from src.directional_survey import *
+from src.dataclass import *
+from src.directional_survey import *
 #path = Path().resolve().parent
 #path = path/'src'
 #print(path)
-from dataclass import *
-from directional_survey import *
+#from dataclass import *
+#from directional_survey import *
 
 # Unit tests
 # TODO find out how to move this to the tests folder, having trouble with paths
