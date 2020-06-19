@@ -5,36 +5,40 @@ import numpy as np
 class DirectionalSurvey:
     """
     Dataclass for Directional Survey Points, takes a list of dictionaries and converts them into np.arrays
-    The data class accepts common directional survey params, some are required, depending on which params
-    are provided the calculation choose the correct method for directional survey conversion.
+    The data class accepts common directional survey params, some are required. Using the required inputs
+    a minimum curvature algorithim will be applied to the data, providing latitude and longitude points
+    along the wellbore and additional useful parameters.
     Intended to be run per well.
 
     Args:
-    wellId (required):
-    md (required): measured depth
-    inc (required): inclination angle
-    azim (required): azimuth degrees
-    tvd: true vertical depth
-    n_s_deviation: north south deviation (all postitive)
-    n_s: north or south id (used to convert n_s_deviation to positive or negative)
-    x_offset: n_s_deviation with its north or south id conversion
-    e_w_deviation: east west deviation (all postitive)
-    e_w: east or west id (used to convert e_w_devitaion to positive or negative)
-    y_offset: e_w_devitaion with its east or west id conversion
-    dls:
-    surface_latitude: surface hole latitude
-    surface_longitude: surface hole longitude
-    surface_x
-    surface_y
-    x_points: 
-    y_points: 
-    zone_number: 
-    zone_letter: 
-    latitude_points: 
-    longitude_points: 
+    wellId:             (required) Unique well identification id
+    md:                 (required) measured depth  is the actual depth of the hole drilled to any point along 
+                        the wellbore or to total depth, as measured from the surface location
+    inc:                (required) inclination angle, the angular measurement that the borehole deviates from vertical.
+    azim:               (required) azimuth degrees, the hole direction is measured in degrees (0 to 360°)
+    tvd:                true vertical depth from surface to the survey point.
+    n_s_deviation:      north south deviation for each point in the wellbore path.
+    x_offset:           The X offset for each point in the bore path.
+    e_w_deviation:      east west deviation for each point in the wellbore path.
+    y_offset:           The Y offset for each point in the wellbore path.
+    dls:                Dogleg severity is a measure of the change in direction of a wellbore 
+                        over a defined length, measured in degrees per 100 feet of length.
+    surface_latitude:   (required) surface hole latitude
+    surface_longitude:  (required) surface hole longitude
+    surface_x: Surface  Easting component of the UTM coordinate
+    surface_y: Surface  Northing component of the UTM coordinate
+    x_points:           Easting component of the UTM coordinate
+    y_points:           Northing component of the UTM coordinate
+    zone_number:        Zone number of the UTM coordinate
+    zone_letter:        Zone letter of the UTM coordinate
+    latitude_points:    The latitude value of a location in the borehole. A positive value denotes north. 
+                        Angle subtended with equatorial plane by a perpendicular from a point on the surface of a spheriod.
+    longitude_points:   The longitude value of a location in a borehole. A positive value denotes east. 
+                        Angle measured about the spheroid axis from a local prime meridian to the meridian through the point.
+    other:              Other additional fields provided in the original dataset. Kept unchanged with the prefix "other." added.
 
     Returns:
-    dataclass Directional Survey object
+    dataclass obj:      Dataclass Directional Survey object
     """
 
     # TODO: when a default value is set to none it creates array(None), needs to be array(None,None,ect...)
