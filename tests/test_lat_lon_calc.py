@@ -5,39 +5,24 @@ from src.directional_survey import *
 import unittest
 
 
-class TestMinCurve(unittest.TestCase):
+class TestLatLonCalc(unittest.TestCase):
 
-    def test_survey_obj_data(self):
+    def test_lat_lon_calc(self):
 
+        # TODO remove loading external lat lon from df, find cleaner way
         path = Path().resolve().parent
         file = path / 'data/wellbore_survey_3.csv'
-
         df = pd.read_csv(file, sep=',')
-
-        df = df[['wellId', 'md', 'inc', 'azim', 'surface_latitude', 'surface_longitude']]
-
-        survey_dict = df.to_dict(orient='records')
-        survey_obj = Survey(survey_dict)
-        self.assertEqual(len(survey_obj.directional_survey_points.wellId), 110, 'incorrect')
-        self.assertEqual(len(survey_obj.directional_survey_points.md), 110, 'incorrect')
-        self.assertEqual(len(survey_obj.directional_survey_points.inc), 110, 'incorrect')
-        self.assertEqual(len(survey_obj.directional_survey_points.azim), 110, 'incorrect')
-        self.assertEqual(len(survey_obj.directional_survey_points.surface_latitude), 110, 'incorrect')
-        self.assertEqual(len(survey_obj.directional_survey_points.surface_longitude), 110, 'incorrect')
-
-    def test_lat_long_calculation(self):
-
-        path = Path().resolve().parent
-        file = path / 'data/wellbore_survey_3.csv'
-
-        df = pd.read_csv(file, sep=',')
-
         df_lat_lon_orig = df[['latitude_decimal_deg', 'longitude_decimal_deg']]
-        df = df[['wellId', 'md', 'inc', 'azim', 'surface_latitude', 'surface_longitude']]
-        survey_dict = df.to_dict(orient='records')
+
+        json_path = path / 'data/wellbore_survey_v2.json'
+
+        with open(json_path) as json_file:
+            data = json.load(json_file)
+        json_file.close()
 
         # get survey obj
-        survey_obj = Survey(survey_dict)
+        survey_obj = Survey(data)
 
         # run min curve algo
         df_min_curve = survey_obj.minimum_curvature_algo()

@@ -36,9 +36,9 @@ def get_directional_survey_dataclass(survey_data_list):
             survey_dict.update({field_name: np.asarray([ROW[field_name] for ROW in survey_data_list])})
 
     # get ProductionMonthly dataclass object for dict
-    directional_survey = DirectionalSurvey(**survey_dict)
+    #directional_survey = DirectionalSurvey(**survey_dict)
 
-    return directional_survey
+    return survey_dict
 
 
 def get_utms(row):

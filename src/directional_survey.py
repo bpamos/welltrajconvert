@@ -1,6 +1,6 @@
 from src.utils import *
 from src.dataclass import *
-
+import json
 
 class Survey:
     """
@@ -16,9 +16,16 @@ class Survey:
         directional_survey_points (Dataclass Object) DirectionalSurvey object
         """
         # convert survey data into its dataclass obj
-        directional_survey_points = get_directional_survey_dataclass(directional_survey_data)
+        #directional_survey_points = get_directional_survey_dataclass(directional_survey_data)
 
-        self.directional_survey_points = directional_survey_points
+        #self.directional_survey_points = directional_survey_points
+        #print(directional_survey_data)
+
+
+        #print(directional_survey_data)
+        directional_survey = DirectionalSurvey(**directional_survey_data)
+
+        self.directional_survey_points = directional_survey
 
     def get_utm_points(self):
         """
@@ -140,7 +147,11 @@ class Survey:
                                   'surface_latitude': self.directional_survey_points.surface_latitude,
                                   'surface_longitude': self.directional_survey_points.surface_longitude})
 
-        survey_dict = survey_df.to_dict(orient='records')
+        survey_data_list = survey_df.to_dict(orient='records')
+
+        # TODO: remove need for dict tranformation
+        survey_data_list = survey_df.to_dict(orient='records')
+        survey_dict = get_directional_survey_dataclass(survey_data_list)
         survey_obj = Survey(survey_dict)
 
         utms = survey_obj.get_utm_points()
@@ -148,7 +159,11 @@ class Survey:
 
         survey_df = pd.merge(survey_df, utms, left_index=True, right_index=True)
 
-        survey_dict = survey_df.to_dict(orient='records')
+        survey_data_list = survey_df.to_dict(orient='records')
+
+        # TODO: remove need for dict tranformation
+        survey_data_list = survey_df.to_dict(orient='records')
+        survey_dict = get_directional_survey_dataclass(survey_data_list)
         survey_obj = Survey(survey_dict)
 
         xy_points = survey_obj.get_xy_points()
@@ -156,7 +171,9 @@ class Survey:
 
         survey_df = pd.merge(survey_df, xy_points, left_index=True, right_index=True)
 
-        survey_dict = survey_df.to_dict(orient='records')
+        # TODO: remove need for dict tranformation
+        survey_data_list = survey_df.to_dict(orient='records')
+        survey_dict = get_directional_survey_dataclass(survey_data_list)
         survey_obj = Survey(survey_dict)
 
         lat_lon_points = survey_obj.get_lat_lon_points()
@@ -225,9 +242,12 @@ class Survey:
         df['e_w_deviation'] = df['ew_cum']
         df['n_s_deviation'] = df['ns_cum']
 
-        survey_dict = df.to_dict(orient='records')
-        # print(survey_dict)
+        # TODO: remove need for dict tranformation
+        survey_data_list = df.to_dict(orient='records')
+        survey_dict = get_directional_survey_dataclass(survey_data_list)
         survey_obj = Survey(survey_dict)
+        #print(survey_obj.directional_survey_points)
         df = survey_obj.get_lat_lon_from_deviation()
+        #print(df.head())
 
         return df
