@@ -40,6 +40,15 @@ def get_directional_survey_dataclass(survey_data_list):
 
     return survey_dict
 
+def is_dict(object):
+    """
+    Helper function that checks if a given parameter is a dict or not
+    """
+
+    if isinstance(object, dict):
+        return True
+    else:
+        return False
 
 def get_utms(row):
     """
