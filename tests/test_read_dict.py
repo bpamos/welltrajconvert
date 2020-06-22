@@ -7,7 +7,7 @@ class TestReadDict(unittest.TestCase):
     def test_read_dict(self):
         current_dir = Path.cwd()
         path = current_dir.parent / 'data'
-        json_path = path / 'wellbore_survey_v3.json'
+        json_path = path / 'wellbore_survey.json'
 
         with open(json_path) as json_file:
             data = json.load(json_file)

@@ -12,12 +12,12 @@ class TestLatLonCalc(unittest.TestCase):
         path = current_dir.parent / 'data'
 
         # get wellbore df
-        file = path / 'wellbore_survey_3.csv'
+        file = path / 'wellbore_survey.csv'
         df = pd.read_csv(file, sep=',')
         df_lat_lon_orig = df[['latitude_decimal_deg', 'longitude_decimal_deg']]
 
         #get wellbore json
-        json_path = path / 'wellbore_survey_v3.json'
+        json_path = path / 'wellbore_survey.json'
 
         with open(json_path) as json_file:
             data = json.load(json_file)
