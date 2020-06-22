@@ -8,14 +8,16 @@ import unittest
 class TestLatLonCalc(unittest.TestCase):
 
     def test_lat_lon_calc(self):
+        current_dir = Path.cwd()
+        path = current_dir.parent / 'data'
 
-        # TODO remove loading external lat lon from df, find cleaner way
-        path = Path().resolve().parent
-        file = path / 'data/wellbore_survey_3.csv'
+        # get wellbore df
+        file = path / 'wellbore_survey_3.csv'
         df = pd.read_csv(file, sep=',')
         df_lat_lon_orig = df[['latitude_decimal_deg', 'longitude_decimal_deg']]
 
-        json_path = path / 'data/wellbore_survey_v3.json'
+        #get wellbore json
+        json_path = path / 'wellbore_survey_v3.json'
 
         with open(json_path) as json_file:
             data = json.load(json_file)

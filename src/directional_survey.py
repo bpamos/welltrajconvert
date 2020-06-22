@@ -3,10 +3,11 @@ from src.dataclass import *
 import json
 from scipy.ndimage.interpolation import shift
 
+
 class Survey:
     """
-    Get information about a directional survey from dict
-    reformat into directional survey obj
+    Get information about a directional survey from dict or dataclass obj
+    and reformat into directional survey obj
     """
 
     def __init__(self, directional_survey_data):
@@ -27,24 +28,27 @@ class Survey:
 
     def calculate_lat_lon_from_deviation_points(self, e_w_deviation, n_s_deviation):
         """
-        get lat lon points from survey using minimum curvature algo generated values
+        get lat lon points from survey using minimum curvature algorithm generated values
         for the ns and ew deviations
 
-        Args:
-        None
+        :parameter:
+        e_w_deviation:          (np.array)
+        n_s_deviation:          (np.array)
         
         required survey data:
-        wellId
-        md
-        inc
-        azim
-        e_w_deviation
-        n_s_deviation
-        surface_latitude
-        surface_longitude
+        self.surface_latitude:  (float)
+        self.surface_longitude: (float)
 
-        Returns:
-        df with lat lon points and other calculated attributes
+        :return:
+        Calculated attributes for lat lon points
+        longitude_points:       (np.array)
+        latitude_points:        (np.array)
+        zone_number:            (str)
+        zone_letter:            (str)
+        x_points:               (np.array)
+        y_points:               (np.array)
+        surface_x:              (np.array)
+        surface_y:              (np.array)
         """
         surface_latitude = self.directional_survey_points.surface_latitude
         surface_longitude = self.directional_survey_points.surface_longitude
@@ -69,8 +73,14 @@ class Survey:
         Calculate values along the wellbore using only provided md, inc, and azim
         calculate TVD, n_s_deviation, e_w_deviation, and dls
 
+        :parameter:
+        None
+
         :return:
-        survey_obj
+        tvd_cum:            (np.array)
+        dls:                (np.array)
+        e_w_deviation:      (np.array)
+        n_s_deviation:      (np.array)
         """
         # Following are the calculations for Minimum Curvature Method
 
@@ -114,16 +124,16 @@ class Survey:
 
         # calculating NS
         ns = ((md - md_shift) / 2) * (
-                    np.sin(inc_rad_shift) * np.cos(azim_rad_shift) +
-                    np.sin(inc_rad) * np.cos(azim_rad)) * rf
+                np.sin(inc_rad_shift) * np.cos(azim_rad_shift) +
+                np.sin(inc_rad) * np.cos(azim_rad)) * rf
         ns[np.isnan(ns)] = 0
 
         n_s_deviation = np.cumsum(ns, dtype=float)
 
         # calculating EW
         ew = ((md - md_shift) / 2) * (
-                    np.sin(inc_rad_shift) * np.sin(azim_rad_shift) +
-                    np.sin(inc_rad) * np.sin(azim_rad)) * rf
+                np.sin(inc_rad_shift) * np.sin(azim_rad_shift) +
+                np.sin(inc_rad) * np.sin(azim_rad)) * rf
         ew[np.isnan(ew)] = 0
 
         e_w_deviation = np.cumsum(ew, dtype=float)
@@ -131,7 +141,17 @@ class Survey:
         return tvd_cum, dls, e_w_deviation, n_s_deviation
 
     def calculate_horizontal(self):
+        """
+        calculate if the inclination of the wellbore is in its horizontal section
+        If the wellbore inclination is greater than 88 degrees the wellbore is horizontal
+        else the well is vertical
 
+        :parameter:
+        None
+
+        :return:
+        inc_hz:     (np.array)
+        """
         # get inc points
         inc = self.directional_survey_points.inc
 
@@ -143,9 +163,16 @@ class Survey:
 
     def calculate_survey_points(self):
         """
+        Run the minimum_curvature_algo, calculate_lat_lon_from_deviation_points, and calculate_horizontal
+        functions to calculate the wells lat lon points and other attributes from provided md, inc, azim
+        and surface lat lon
 
+        :parameter:
+        None
 
         :return:
+        survey_points_obj:       (Survey obj)
+
         """
 
         # get minimum curvature points
@@ -186,8 +213,14 @@ class Survey:
 
     def get_survey_df(self):
         """
+        Convert survey object to dataframe
+
+        :parameter:
+        None
 
         :return:
+        survey_df:      (dataframe)
+
         """
 
         survey_df = pd.DataFrame({'wellId': self.directional_survey_points.wellId,
