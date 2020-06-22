@@ -27,6 +27,8 @@ class TestLatLonCalc(unittest.TestCase):
         # run min curve algo
         df_min_curve = survey_obj.minimum_curvature_algo()
 
+        df_min_curve = Survey.get_survey_df(df_min_curve)
+
         df_test = pd.merge(df_min_curve, df_lat_lon_orig, left_index=True, right_index=True)
 
         def get_change(current, previous):
