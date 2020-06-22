@@ -15,7 +15,7 @@ class TestLatLonCalc(unittest.TestCase):
         df = pd.read_csv(file, sep=',')
         df_lat_lon_orig = df[['latitude_decimal_deg', 'longitude_decimal_deg']]
 
-        json_path = path / 'data/wellbore_survey_v2.json'
+        json_path = path / 'data/wellbore_survey_v3.json'
 
         with open(json_path) as json_file:
             data = json.load(json_file)
@@ -24,11 +24,13 @@ class TestLatLonCalc(unittest.TestCase):
         # get survey obj
         survey_obj = Survey(data)
 
-        # run min curve algo
-        df_min_curve = survey_obj.minimum_curvature_algo()
+        # run survey points calc
+        survey_points_obj = survey_obj.calculate_survey_points()
 
-        df_min_curve = Survey.get_survey_df(df_min_curve)
+        # convert to df
+        df_min_curve = Survey.get_survey_df(survey_points_obj)
 
+        # merge original df (with official lat lon points) and calculated lat lon points
         df_test = pd.merge(df_min_curve, df_lat_lon_orig, left_index=True, right_index=True)
 
         def get_change(current, previous):
