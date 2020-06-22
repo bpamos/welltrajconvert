@@ -56,6 +56,7 @@ class DirectionalSurvey:
     e_w_deviation: np.array = field(default=None, metadata={'unit': 'float'})
     e_w: np.array = field(default=None, metadata={'unit': 'str'})
     y_offset: np.array = field(default=None, metadata={'unit': 'float'})
+    # TODO: dls looks like build rate with no negatives (look into)
     dls: np.array = field(default=None, metadata={'unit': 'float'})
     surface_latitude: np.array = field(default=None, metadata={'unit': 'float'})
     surface_longitude: np.array = field(default=None, metadata={'unit': 'float'})
@@ -67,3 +68,4 @@ class DirectionalSurvey:
     zone_letter: np.array = field(default=None, metadata={'unit': 'str'})
     latitude_points: np.array = field(default=None, metadata={'unit': 'float'})
     longitude_points: np.array = field(default=None, metadata={'unit': 'float'})
+    isHorizontal: np.array = field(default=None, metadata={'unit': 'str'})

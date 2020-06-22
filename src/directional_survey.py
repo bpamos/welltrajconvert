@@ -1,7 +1,6 @@
 from src.utils import *
 from src.dataclass import *
 import json
-#import scipy
 from scipy.ndimage.interpolation import shift
 
 class Survey:
@@ -17,6 +16,8 @@ class Survey:
         Attributes:
         directional_survey_points (Dataclass Object) DirectionalSurvey object
         """
+
+        # if data can come in dict or dataclass obj format
         if is_dict(directional_survey_data) is True:
             # convert survey data into its dataclass obj
             directional_survey = DirectionalSurvey(**directional_survey_data)
@@ -24,9 +25,10 @@ class Survey:
         else:
             self.directional_survey_points = directional_survey_data
 
-    def get_lat_lon_from_deviation(self):
+    def calculate_lat_lon_from_deviation_points(self, e_w_deviation, n_s_deviation):
         """
-        get lat lon points from survey if ns and ew deviations and their ew and ns ids are provided.
+        get lat lon points from survey using minimum curvature algo generated values
+        for the ns and ew deviations
 
         Args:
         None
@@ -37,9 +39,7 @@ class Survey:
         inc
         azim
         e_w_deviation
-        e_w
         n_s_deviation
-        n_s
         surface_latitude
         surface_longitude
 
@@ -48,61 +48,42 @@ class Survey:
         """
         surface_latitude = self.directional_survey_points.surface_latitude
         surface_longitude = self.directional_survey_points.surface_longitude
-        e_w_deviation = self.directional_survey_points.e_w_deviation
-        n_s_deviation = self.directional_survey_points.n_s_deviation
 
-        surface_x, surface_y, zone_number, zone_letter = utm.from_latlon(surface_latitude[0], surface_longitude[0])
+        # create X and Y deviation points and zone number and letter
+        surface_x, surface_y, zone_number, zone_letter = utm.from_latlon(surface_latitude, surface_longitude)
 
-        # create X and Y columns for each deviation point
         # add the x and y offset from the surface x and y for each point * meters conversion
-        # TODO add meters or feet conversion. Currenlty assumes offset feet and converts to meters
         x_points = np.multiply(e_w_deviation, 0.3048) + surface_x
         y_points = np.multiply(n_s_deviation, 0.3048) + surface_y
 
+        # create lat lon points along the wellbore from the x,y,zone number and leter
         latitude_points, longitude_points = utm.to_latlon(x_points, y_points, zone_number, zone_letter)
 
-
-        directional_survey = DirectionalSurvey(wellId=self.directional_survey_points.wellId,
-                                               md=self.directional_survey_points.md,
-                                               inc=self.directional_survey_points.inc,
-                                               azim=self.directional_survey_points.azim,
-                                               surface_latitude=self.directional_survey_points.surface_latitude,
-                                               surface_longitude=self.directional_survey_points.surface_longitude,
-                                               tvd=self.directional_survey_points.tvd,
-                                               dls=self.directional_survey_points.dls,
-                                               longitude_points=longitude_points,
-                                               latitude_points=latitude_points,
-                                               zone_number=zone_number,
-                                               zone_letter=zone_letter,
-                                               x_points=x_points,
-                                               y_points=y_points,
-                                               surface_x=surface_x,
-                                               surface_y=surface_y
-                                               )
-
-        survey_obj = Survey(directional_survey)
-
-        return survey_obj
+        return (longitude_points, latitude_points,
+                zone_number, zone_letter,
+                x_points, y_points,
+                surface_x, surface_y)
 
     def minimum_curvature_algo(self):
+        """
+        Calculate values along the wellbore using only provided md, inc, and azim
+        calculate TVD, n_s_deviation, e_w_deviation, and dls
+
+        :return:
+        survey_obj
+        """
         # Following are the calculations for Minimum Curvature Method
 
-        wellId = self.directional_survey_points.wellId
         md = self.directional_survey_points.md
         inc = self.directional_survey_points.inc
         azim = self.directional_survey_points.azim
-        surface_latitude = self.directional_survey_points.surface_latitude
-        surface_longitude = self.directional_survey_points.surface_longitude
 
         # Convert to Radians
-        inc_rad = np.multiply(self.directional_survey_points.inc, 0.0174533)
-        azim_rad = np.multiply(self.directional_survey_points.azim, 0.0174533)
+        inc_rad = np.multiply(inc, 0.0174533)
+        azim_rad = np.multiply(azim, 0.0174533)
 
         # Shift all array values +1
         md_shift = shift(md, 1, cval=np.NaN)
-        inc_shift = shift(inc, 1, cval=np.NaN)
-        azim_shift = shift(azim, 1, cval=np.NaN)
-        inc_rad_shift = shift(inc_rad, 1, cval=np.NaN)
         inc_rad_shift = shift(inc_rad, 1, cval=np.NaN)
         azim_rad_shift = shift(azim_rad, 1, cval=np.NaN)
 
@@ -133,50 +114,87 @@ class Survey:
 
         # calculating NS
         ns = ((md - md_shift) / 2) * (
-                    np.sin(inc_rad_shift) * np.cos(azim_rad_shift) + np.sin(inc_rad) * np.cos(azim_rad)) * rf
+                    np.sin(inc_rad_shift) * np.cos(azim_rad_shift) +
+                    np.sin(inc_rad) * np.cos(azim_rad)) * rf
         ns[np.isnan(ns)] = 0
 
         n_s_deviation = np.cumsum(ns, dtype=float)
 
         # calculating EW
         ew = ((md - md_shift) / 2) * (
-                    np.sin(inc_rad_shift) * np.sin(azim_rad_shift) + np.sin(inc_rad) * np.sin(azim_rad)) * rf
+                    np.sin(inc_rad_shift) * np.sin(azim_rad_shift) +
+                    np.sin(inc_rad) * np.sin(azim_rad)) * rf
         ew[np.isnan(ew)] = 0
 
         e_w_deviation = np.cumsum(ew, dtype=float)
 
+        return tvd_cum, dls, e_w_deviation, n_s_deviation
 
-        # 'inc_rad': inc_rad,
-        # 'azim_rad': azim_rad,
-        # 'beta': beta,
-        # 'rf': rf,
-        # 'tvd_cum': tvd_cum,
-        # 'ew': ew,
-        # 'ns': ns
+    def calculate_horizontal(self):
+
+        # get inc points
+        inc = self.directional_survey_points.inc
+
+        # inc greater than 88 deg is horizontal, else vertical
+        inc_hz = np.greater(inc, 88)
+        inc_hz = np.where((inc_hz == True), 'Horizontal', 'Vertical')
+
+        return inc_hz
+
+    def calculate_survey_points(self):
+        """
+
+
+        :return:
+        """
+
+        # get minimum curvature points
+        tvd_cum, dls, e_w_deviation, n_s_deviation = self.minimum_curvature_algo()
+
+        # get lat lon points
+        (longitude_points, latitude_points,
+         zone_number, zone_letter,
+         x_points, y_points,
+         surface_x, surface_y) = self.calculate_lat_lon_from_deviation_points(e_w_deviation, n_s_deviation)
+
+        inc_hz = self.calculate_horizontal()
+
         directional_survey = DirectionalSurvey(wellId=self.directional_survey_points.wellId,
-                                               md=md,
-                                               inc=inc,
-                                               azim=azim,
-                                               surface_latitude=surface_latitude,
-                                               surface_longitude=surface_longitude,
-                                               tvd=tvd,
-                                               dls=dls,
+                                               md=self.directional_survey_points.md,
+                                               inc=self.directional_survey_points.inc,
+                                               azim=self.directional_survey_points.azim,
+                                               surface_latitude=self.directional_survey_points.surface_latitude,
+                                               surface_longitude=self.directional_survey_points.surface_longitude,
                                                e_w_deviation=e_w_deviation,
-                                               n_s_deviation=n_s_deviation)
+                                               n_s_deviation=n_s_deviation,
+                                               tvd=tvd_cum,
+                                               dls=dls,
+                                               longitude_points=longitude_points,
+                                               latitude_points=latitude_points,
+                                               zone_number=zone_number,
+                                               zone_letter=zone_letter,
+                                               x_points=x_points,
+                                               y_points=y_points,
+                                               surface_x=surface_x,
+                                               surface_y=surface_y,
+                                               isHorizontal=inc_hz
+                                               )
+        # convert to survey obj
+        survey_points_obj = Survey(directional_survey)
 
-        survey_obj = Survey(directional_survey)
-
-        survey_obj = survey_obj.get_lat_lon_from_deviation()
-
-        return survey_obj
-
+        return survey_points_obj
 
     def get_survey_df(self):
+        """
+
+        :return:
+        """
 
         survey_df = pd.DataFrame({'wellId': self.directional_survey_points.wellId,
                                   'md': self.directional_survey_points.md,
                                   'inc': self.directional_survey_points.inc,
                                   'azim': self.directional_survey_points.azim,
+                                  'tvd': self.directional_survey_points.tvd,
                                   'e_w_deviation': self.directional_survey_points.e_w_deviation,
                                   'n_s_deviation': self.directional_survey_points.n_s_deviation,
                                   'dls': self.directional_survey_points.dls,
@@ -189,6 +207,8 @@ class Survey:
                                   'x_points': self.directional_survey_points.x_points,
                                   'y_points': self.directional_survey_points.y_points,
                                   'surface_x': self.directional_survey_points.surface_x,
-                                  'surface_y': self.directional_survey_points.surface_y
+                                  'surface_y': self.directional_survey_points.surface_y,
+                                  'isHorizontal': self.directional_survey_points.isHorizontal
                                   })
+
         return survey_df
