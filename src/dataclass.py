@@ -26,46 +26,60 @@ class DirectionalSurvey:
                         over a defined length, measured in degrees per 100 feet of length.
     surface_latitude:   (required) surface hole latitude
     surface_longitude:  (required) surface hole longitude
-    surface_x: Surface  Easting component of the UTM coordinate
-    surface_y: Surface  Northing component of the UTM coordinate
+    surface_x:          Surface Easting component of the UTM coordinate
+    surface_y:          Surface Northing component of the UTM coordinate
     x_points:           Easting component of the UTM coordinate
     y_points:           Northing component of the UTM coordinate
     zone_number:        Zone number of the UTM coordinate
     zone_letter:        Zone letter of the UTM coordinate
-    latitude_points:    The latitude value of a location in the borehole. A positive value denotes north. 
-                        Angle subtended with equatorial plane by a perpendicular from a point on the surface of a spheriod.
-    longitude_points:   The longitude value of a location in a borehole. A positive value denotes east. 
-                        Angle measured about the spheroid axis from a local prime meridian to the meridian through the point.
-    other:              Other additional fields provided in the original dataset. Kept unchanged with the prefix "other." added.
+    latitude_points:    The latitude value of a location in the borehole.
+                        A positive value denotes north.
+                        Angle subtended with equatorial plane by a perpendicular
+                        from a point on the surface of a spheriod.
+    longitude_points:   The longitude value of a location in a borehole.
+                        A positive value denotes east.
+                        Angle measured about the spheroid axis from
+                        a local prime meridian to the meridian through the point.
 
     Returns:
     dataclass obj:      Dataclass Directional Survey object
     """
 
-    # TODO: when a default value is set to none it creates array(None), needs to be array(None,None,ect...)
-    # how is the none supposed to work within the data class array.
-
-    wellId: np.array
-    md: np.array
-    inc: np.array
-    azim: np.array
-    tvd: np.array = field(default=None, metadata={'unit': 'float'})
-    n_s_deviation: np.array = field(default=None, metadata={'unit': 'float'})
-    n_s: np.array = field(default=None, metadata={'unit': 'str'})
-    x_offset: np.array = field(default=None, metadata={'unit': 'float'})
-    e_w_deviation: np.array = field(default=None, metadata={'unit': 'float'})
-    e_w: np.array = field(default=None, metadata={'unit': 'str'})
-    y_offset: np.array = field(default=None, metadata={'unit': 'float'})
+    wellId: str
+    md: np.ndarray
+    inc: np.ndarray
+    azim: np.ndarray
+    surface_latitude: float
+    surface_longitude: float
+    tvd: np.ndarray = field(default=None, metadata={'unit': 'float'})
+    n_s_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
+    ## n_s: np.ndarray = field(default=None, metadata={'unit': 'str'}) # not used, remove?
+    ## x_offset: np.ndarray = field(default=None, metadata={'unit': 'float'}) # not used, remove?
+    e_w_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
+    ## e_w: np.ndarray = field(default=None, metadata={'unit': 'str'}) # not used, remove?
+    ## y_offset: np.ndarray = field(default=None, metadata={'unit': 'float'}) # not used, remove?
     # TODO: dls looks like build rate with no negatives (look into)
-    dls: np.array = field(default=None, metadata={'unit': 'float'})
-    surface_latitude: np.array = field(default=None, metadata={'unit': 'float'})
-    surface_longitude: np.array = field(default=None, metadata={'unit': 'float'})
-    surface_x: np.array = field(default=None, metadata={'unit': 'float'})
-    surface_y: np.array = field(default=None, metadata={'unit': 'float'})
-    x_points: np.array = field(default=None, metadata={'unit': 'float'})
-    y_points: np.array = field(default=None, metadata={'unit': 'float'})
-    zone_number: np.array = field(default=None, metadata={'unit': 'int'})
-    zone_letter: np.array = field(default=None, metadata={'unit': 'str'})
-    latitude_points: np.array = field(default=None, metadata={'unit': 'float'})
-    longitude_points: np.array = field(default=None, metadata={'unit': 'float'})
-    isHorizontal: np.array = field(default=None, metadata={'unit': 'str'})
+    dls: np.ndarray = field(default=None, metadata={'unit': 'float'})
+    surface_x: float = field(default=None, metadata={'unit': 'float'})
+    surface_y: float = field(default=None, metadata={'unit': 'float'})
+    x_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
+    y_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
+    zone_number: int = field(default=None, metadata={'unit': 'int'})
+    zone_letter: str = field(default=None, metadata={'unit': 'str'})
+    latitude_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
+    longitude_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
+    isHorizontal: np.ndarray = field(default=None, metadata={'unit': 'str'})
+
+    def __post_init__(self):
+        """
+        look in all fields and types,
+        if type is None pass,
+        else if type given doesnt match dataclass type raise error
+        """
+        for (name, field_type) in self.__annotations__.items():
+            if not isinstance(self.__dict__[name], field_type):
+                current_type = type(self.__dict__[name])
+                if current_type is type(None):
+                    pass
+                else:
+                    raise ValueError(f"The field `{name}` was assigned by `{current_type}` instead of `{field_type}`")

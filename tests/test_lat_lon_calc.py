@@ -24,8 +24,16 @@ class TestLatLonCalc(unittest.TestCase):
         json_file.close()
 
         # get survey obj
-        survey_obj = Survey(data)
+        #survey_obj = Survey(data)
+        #TODO: find way to not have to classify things as np.arrays
+        dataclass_obj = DirectionalSurvey(wellId = data['wellId'],
+                                       md = np.array(data['md']),
+                                       inc = np.array(data['inc']),
+                                       azim = np.array(data['azim']),
+                                       surface_latitude = data['surface_latitude'],
+                                       surface_longitude = data['surface_longitude'])
 
+        survey_obj = Survey(dataclass_obj)
         # run survey points calc
         survey_points_obj = survey_obj.calculate_survey_points()
 

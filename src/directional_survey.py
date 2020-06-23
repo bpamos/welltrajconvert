@@ -18,13 +18,22 @@ class Survey:
         directional_survey_points (Dataclass Object) DirectionalSurvey object
         """
 
-        # if data can come in dict or dataclass obj format
-        if is_dict(directional_survey_data) is True:
-            # convert survey data into its dataclass obj
-            directional_survey = DirectionalSurvey(**directional_survey_data)
-            self.directional_survey_points = directional_survey
-        else:
-            self.directional_survey_points = directional_survey_data
+        # data can come in dict or dataclass obj format
+        # TODO: do I want to allow for any dict or defined dataclass, or just a dataclass obj
+        # if is_dict(directional_survey_data) is True:
+        #     # convert survey dict into its dataclass obj then into its survey obj
+        #     directional_survey = DirectionalSurvey(**directional_survey_data)
+        #     self.directional_survey_points = directional_survey
+        # else:
+        #     # convert dataclass obj to is survey obj
+        #     self.directional_survey_points = directional_survey_data
+
+        # if kwargs is None:
+        #     self.directional_survey_points = directional_survey_data
+        # else:
+        #     self.directional_survey_points = (directional_survey_data, kwargs)
+
+        self.directional_survey_points = directional_survey_data
 
     def calculate_lat_lon_from_deviation_points(self, e_w_deviation, n_s_deviation):
         """
