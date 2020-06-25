@@ -1,5 +1,7 @@
-from dataclasses import dataclass, field
-import numpy as np
+from src.core import *
+
+#from dataclasses import dataclass, field
+#import numpy as np
 
 
 @dataclass
@@ -45,6 +47,9 @@ class DirectionalSurvey:
     dataclass obj:      Dataclass Directional Survey object
     """
 
+    # TODO: enforce md, inc, and azim to be same length
+    # TODO: enforce md to be postitive, inc to be between 0 and 100, azim to be between 0 and 360
+    # TODO: enforce lat and lon to be between some values as well.
     wellId: str
     md: np.ndarray
     inc: np.ndarray
