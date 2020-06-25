@@ -1,8 +1,26 @@
-import pandas as pd
-import utm
-from pathlib import Path
+#import pandas as pd
+#import utm
+#from pathlib import Path
+from src.core import *
 from src.dataclass import *
 from src.directional_survey import *
+
+
+def ifnone(a:Any,b:Any)->Any:
+    "`a` if `a` is not None, otherwise `b`."
+    return b if a is None else a
+
+
+def is_dict(object):
+    """
+    Helper function that checks if a given parameter is a dict or not
+    """
+
+    if isinstance(object, dict):
+        return True
+    else:
+        return False
+
 
 
 # def get_directional_survey_dataclass(survey_data_list):
@@ -70,20 +88,3 @@ def is_dict(object):
 #     tup = utm.to_latlon(row.iloc[0], row.iloc[1], row.iloc[2], row.iloc[3])
 #     return pd.Series(tup[:2])
 
-
-def read_data(path_file):
-    """
-    
-    """
-    file = path_file
-
-    df = pd.read_csv(file, sep=',')
-
-    survey_dict = df.to_dict(orient='records')
-
-    return survey_dict
-
-# # filter to dict to select keys and create list of dicts
-# keys = ['wellId','md','inc','azim','surface_latitude','surface_longitude','latitude_decimal_deg','longitude_decimal_deg']
-# survey_dict = [(dict((k, d[k]) for k in keys if k in d)) for d in my_data]
-# survey_dict
