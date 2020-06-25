@@ -1,6 +1,6 @@
-import unittest
+#from src.core import *
 from src.directional_survey import *
-
+import unittest
 
 class TestReadDict(unittest.TestCase):
 

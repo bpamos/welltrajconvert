@@ -1,8 +1,10 @@
+#from src.core import *
 from src.directional_survey import *
+import unittest
 
 # Unit tests
 # TODO find out how to move this to the tests folder, having trouble with paths
-import unittest
+
 
 
 class TestLatLonCalc(unittest.TestCase):
