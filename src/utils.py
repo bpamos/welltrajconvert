@@ -1,8 +1,5 @@
-#import pandas as pd
-#import utm
-#from pathlib import Path
 from src.core import *
-from src.dataclass import *
+from src.data_object import *
 from src.directional_survey import *
 
 
@@ -32,13 +29,13 @@ def is_dict(object):
 #
 #     Args:
 #     survey_data_list (list of dicts) list of directional survey data dicts to iterate over
-#     (data dict should should match required dict format for DirectionalSurvey dataclass)
+#     (data dict should should match required dict format for DataObject dataclass)
 #
 #     Returns:
-#     DirectionalSurvey dataclass object for one well
+#     DataObject dataclass object for one well
 #     """
 #
-#     # DirectionalSurvey dataclass fields
+#     # DataObject dataclass fields
 #     survey_fields_list = ['wellId', 'md', 'inc', 'azim', 'tvd',
 #                           'n_s_deviation', 'n_s', 'x_offset',
 #                           'e_w_deviation', 'e_w', 'y_offset', 'dls',
@@ -54,7 +51,7 @@ def is_dict(object):
 #             survey_dict.update({field_name: np.asarray([ROW[field_name] for ROW in survey_data_list])})
 #
 #     # get ProductionMonthly dataclass object for dict
-#     #directional_survey = DirectionalSurvey(**survey_dict)
+#     #directional_survey = DataObject(**survey_dict)
 #
 #     return survey_dict
 
