@@ -1,11 +1,8 @@
-#from src.core import *
 from src.directional_survey import *
 import unittest
 
 # Unit tests
 # TODO find out how to move this to the tests folder, having trouble with paths
-
-
 
 class TestLatLonCalc(unittest.TestCase):
 
@@ -26,21 +23,21 @@ class TestLatLonCalc(unittest.TestCase):
         json_file.close()
 
         # get survey obj
-        #survey_obj = Survey(data)
+        #survey_obj = DirectionalSurvey(data)
         #TODO: find way to not have to classify things as np.arrays
-        dataclass_obj = DirectionalSurvey(wellId = data['wellId'],
-                                       md = np.array(data['md']),
-                                       inc = np.array(data['inc']),
-                                       azim = np.array(data['azim']),
-                                       surface_latitude = data['surface_latitude'],
-                                       surface_longitude = data['surface_longitude'])
+        dataclass_obj = DataObject(wellId = data['wellId'],
+                                   md = np.array(data['md']),
+                                   inc = np.array(data['inc']),
+                                   azim = np.array(data['azim']),
+                                   surface_latitude = data['surface_latitude'],
+                                   surface_longitude = data['surface_longitude'])
 
-        survey_obj = Survey(dataclass_obj)
+        survey_obj = DirectionalSurvey(dataclass_obj)
         # run survey points calc
         survey_points_obj = survey_obj.calculate_survey_points()
 
         # convert to df
-        df_min_curve = Survey.get_survey_df(survey_points_obj)
+        df_min_curve = DirectionalSurvey.get_survey_df(survey_points_obj)
 
         # merge original df (with official lat lon points) and calculated lat lon points
         df_test = pd.merge(df_min_curve, df_lat_lon_orig, left_index=True, right_index=True)

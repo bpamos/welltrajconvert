@@ -1,11 +1,10 @@
-#from src.core import *
 from src.directional_survey import *
 import unittest
 
 class TestRead(unittest.TestCase):
 
-# TYPE ERRORS, md, inc, azim, wellid, surface lat and lon must be present
-    def test_md_is_present(self):
+    # TYPE ERRORS, md, inc, azim, wellid, surface lat and lon must be present
+    def test_required_data_is_present(self):
         # md, inc, and azim can not have negative values, should throw error
 
         current_dir = Path.cwd()
@@ -18,20 +17,15 @@ class TestRead(unittest.TestCase):
 
         # create directional survey object
         # requires func for test
-        def error_func(data):
-            DirectionalSurvey(wellId=data['wellId'],
-                              inc=np.array(data['inc']),
-                              azim=np.array(data['azim']),
-                              surface_latitude=data['surface_latitude'],
-                              surface_longitude=data['surface_longitude']
-                              )
+        def error_func():
+            DataObject()
 
         # create error raise
         with self.assertRaises(TypeError) as cm:
-            error_func(data)
+            error_func()
         the_exception = cm.exception
         #print(the_exception.args[0])
-        error_code = """__init__() missing 1 required positional argument: 'md'"""
+        error_code = """__init__() missing 6 required positional arguments: 'wellId', 'md', 'inc', 'azim', 'surface_latitude', and 'surface_longitude'"""
         self.assertEqual(the_exception.args[0], error_code)
 
 
@@ -52,14 +46,14 @@ class TestRead(unittest.TestCase):
 
         # create directional survey object
         # requires func for test
-        def error_func(data, inc_int):
-            DirectionalSurvey(wellId=data['wellId'],
-                          md=param_int,
-                          inc=np.array(data['inc']),
-                          azim=np.array(data['azim']),
-                          surface_latitude=data['surface_latitude'],
-                          surface_longitude=data['surface_longitude']
-                          )
+        def error_func(data, param_int):
+            DataObject(wellId=data['wellId'],
+                       md=param_int,
+                       inc=np.array(data['inc']),
+                       azim=np.array(data['azim']),
+                       surface_latitude=data['surface_latitude'],
+                       surface_longitude=data['surface_longitude']
+                       )
         # create error raise
         with self.assertRaises(ValueError) as cm:
             error_func(data, param_int)
@@ -84,13 +78,13 @@ class TestRead(unittest.TestCase):
         # create directional survey object
         # requires func for test
         def error_func(data, inc_int):
-            DirectionalSurvey(wellId=data['wellId'],
-                          md=np.array(data['md']),
-                          inc=param_int,
-                          azim=np.array(data['azim']),
-                          surface_latitude=data['surface_latitude'],
-                          surface_longitude=data['surface_longitude']
-                          )
+            DataObject(wellId=data['wellId'],
+                       md=np.array(data['md']),
+                       inc=param_int,
+                       azim=np.array(data['azim']),
+                       surface_latitude=data['surface_latitude'],
+                       surface_longitude=data['surface_longitude']
+                       )
         # create error raise
         with self.assertRaises(ValueError) as cm:
             error_func(data, param_int)
@@ -116,13 +110,13 @@ class TestRead(unittest.TestCase):
         # create directional survey object
         # requires func for test
         def error_func(data, inc_int):
-            DirectionalSurvey(wellId=data['wellId'],
-                          md=np.array(data['md']),
-                          inc=np.array(data['inc']),
-                          azim=param_int,
-                          surface_latitude=data['surface_latitude'],
-                          surface_longitude=data['surface_longitude']
-                          )
+            DataObject(wellId=data['wellId'],
+                       md=np.array(data['md']),
+                       inc=np.array(data['inc']),
+                       azim=param_int,
+                       surface_latitude=data['surface_latitude'],
+                       surface_longitude=data['surface_longitude']
+                       )
         # create error raise
         with self.assertRaises(ValueError) as cm:
             error_func(data, param_int)
@@ -146,13 +140,13 @@ class TestRead(unittest.TestCase):
         # create directional survey object
         # requires func for test
         def error_func(data):
-            DirectionalSurvey(wellId=data['wellId'],
-                          md=data['md'],
-                          inc=np.array(data['inc']),
-                          azim=np.array(data['azim']),
-                          surface_latitude=data['surface_latitude'],
-                          surface_longitude=data['surface_longitude']
-                          )
+            DataObject(wellId=data['wellId'],
+                       md=data['md'],
+                       inc=np.array(data['inc']),
+                       azim=np.array(data['azim']),
+                       surface_latitude=data['surface_latitude'],
+                       surface_longitude=data['surface_longitude']
+                       )
         # create error raise
         with self.assertRaises(ValueError) as cm:
             error_func(data)
@@ -163,134 +157,125 @@ class TestRead(unittest.TestCase):
 
 
 
-    # def test_arrays_are_equal_len(self):
-    #     # md, inc, and azim can not have negative values, should throw error
-    #
-    #     current_dir = Path.cwd()
-    #     path = current_dir.parent / 'data'
-    #     json_path = path / 'wellbore_survey.json'
-    #
-    #     with open(json_path) as json_file:
-    #         data = json.load(json_file)
-    #     json_file.close()
-    #
-    #     # convert param to int for error
-    #     param_array = np.array([10,15,40])
-    #
-    #     # create directional survey object
-    #     # requires func for test
-    #     def error_func(data, inc_int):
-    #         DirectionalSurvey(wellId=data['wellId'],
-    #                       md=np.array(data['md']),
-    #                       inc=np.array(data['inc']),
-    #                       azim=param_array,
-    #                       surface_latitude=data['surface_latitude'],
-    #                       surface_longitude=data['surface_longitude']
-    #                       )
-    #     # create error raise
-    #
-    #     print()
-    #
-    #     with self.assertRaises(ValueError) as cm:
-    #         error_func(data, param_array)
-    #     the_exception = cm.exception
-    #     #print(the_exception.args[0])
-    #     error_code = "The field `azim` was assigned by `<class 'int'>` instead of `<class 'numpy.ndarray'>`"
-    #     self.assertEqual(the_exception.args[0], error_code)
-    # def test_param_neg(self):
-    #     # md, inc, and azim can not have negative values, should throw error
-    #
-    #     current_dir = Path.cwd()
-    #     path = current_dir.parent / 'data'
-    #     json_path = path / 'wellbore_survey.json'
-    #
-    #     with open(json_path) as json_file:
-    #         data = json.load(json_file)
-    #     json_file.close()
-    #
-    #     # convert md to neg values
-    #     md_neg = np.multiply(data['md'], -1)
-    #     inc_neg = np.multiply(data['inc'], -1)
-    #     azim_neg = np.multiply(data['azim'], -1)
-    #
-    #     # create directional survey object
-    #     directional_survey = DirectionalSurvey(wellId=data['wellId'],
-    #                                            md=md_neg,
-    #                                            inc=inc_neg,
-    #                                            azim=azim_neg,
-    #                                            surface_latitude=data['surface_latitude'],
-    #                                            surface_longitude=data['surface_longitude'],
-    #                                            )
-    #
-    #     survey_obj = Survey(directional_survey)
-    #
-    #     self.assertEqual(len(survey_obj.directional_survey_points.md), 110, 'incorrect')
-#
-#     def test_param_max_value(self):
-#         # azim can not be above 360, inc can not have values above 100, should throw error
-#         # TODO: should I include the inc value?
-#         # TODO: should I include a conversion, if azim greater than 360 subtract 360?
-#
-#         current_dir = Path.cwd()
-#         path = current_dir.parent / 'data'
-#         json_path = path / 'wellbore_survey.json'
-#
-#         with open(json_path) as json_file:
-#             data = json.load(json_file)
-#         json_file.close()
-#
-#         # convert md to neg values
-#         azim_double = np.multiply(data['azim'], 2)
-#         inc_double = np.multiply(data['inc'], 2)
-#
-#         # create directional survey object
-#         directional_survey = DirectionalSurvey(wellId=data['wellId'],
-#                                                md=data['md'],
-#                                                inc=inc_double,
-#                                                azim=azim_double,
-#                                                surface_latitude=data['surface_latitude'],
-#                                                surface_longitude=data['surface_longitude'],
-#                                                )
-#
-#         survey_obj = Survey(directional_survey)
-#
-#         self.assertEqual(len(survey_obj.directional_survey_points.azim), 110, 'incorrect')
-#
-#     def test_param_not_array(self):
-#         # md, inc, and azim can not have negative values, should throw error
-#
-#         current_dir = Path.cwd()
-#         path = current_dir.parent / 'data'
-#         json_path = path / 'wellbore_survey.json'
-#
-#         with open(json_path) as json_file:
-#             data = json.load(json_file)
-#         json_file.close()
-#
-#         # convert md to neg values
-#         wellId_list = [data['wellId'] for i in range(110)]
-#         #wellId_list = data['wellId']
-#
-#         # create directional survey object
-#         directional_survey = DirectionalSurvey(wellId=wellId_list,
-#                                                md=data['md'],
-#                                                inc=data['inc'],
-#                                                azim=data['azim'],
-#                                                surface_latitude=data['surface_latitude'],
-#                                                surface_longitude=data['surface_longitude'],
-#                                                )
-#
-#         survey_obj = Survey(directional_survey)
-#         print(survey_obj.directional_survey_points)
-#
-#         # run survey points calc
-#         survey_points_obj = survey_obj.calculate_survey_points()
-#
-#         # convert to df
-#         df_min_curve = Survey.get_survey_df(survey_points_obj)
-#         print(df_min_curve)
-#
-#         self.assertEqual(len(survey_obj.directional_survey_points.md), 110, 'incorrect')
+    def test_arrays_are_equal_len(self):
+
+            current_dir = Path.cwd()
+            path = current_dir.parent / 'data'
+            json_path = path / 'wellbore_survey.json'
+
+            with open(json_path) as json_file:
+                data = json.load(json_file)
+            json_file.close()
+
+
+
+            param_val = [1,2,3]
+
+            # create directional survey object
+            # requires func for test
+            def error_func(data, param_val):
+                DataObject(wellId=data['wellId'],
+                           md=np.array(param_val),
+                           inc=np.array(data['inc']),
+                           azim=np.array(data['azim']),
+                           surface_latitude=data['surface_latitude'],
+                           surface_longitude=data['surface_longitude']
+                           )
+
+            # create error raise
+            with self.assertRaises(ValueError) as cm:
+                error_func(data, param_val)
+            the_exception = cm.exception
+            #print(the_exception.args[0])
+            error_code = "Validation Error: Array lengths must be equal, md length: `3` md length: `110` md length: `110`"
+            self.assertEqual(the_exception.args[0], error_code)
+
+    def test_md_array_sign(self):
+
+            current_dir = Path.cwd()
+            path = current_dir.parent / 'data'
+            json_path = path / 'wellbore_survey.json'
+
+            with open(json_path) as json_file:
+                data = json.load(json_file)
+            json_file.close()
+
+            # create directional survey object
+            # requires func for test
+            def error_func(data):
+                DataObject(wellId=data['wellId'],
+                           md=np.array(data['md'])*-1,
+                           inc=np.array(data['inc']),
+                           azim=np.array(data['azim']),
+                           surface_latitude=data['surface_latitude'],
+                           surface_longitude=data['surface_longitude']
+                           )
+
+            # create error raise
+            with self.assertRaises(ValueError) as cm:
+                error_func(data)
+            the_exception = cm.exception
+            #print(the_exception.args[0])
+            error_code = "Validation Error: MD array has negative values"
+            self.assertEqual(the_exception.args[0], error_code)
+
+    def test_inc_array_sign(self):
+
+            current_dir = Path.cwd()
+            path = current_dir.parent / 'data'
+            json_path = path / 'wellbore_survey.json'
+
+            with open(json_path) as json_file:
+                data = json.load(json_file)
+            json_file.close()
+
+            # create directional survey object
+            # requires func for test
+            def error_func(data):
+                DataObject(wellId=data['wellId'],
+                           md=np.array(data['md']),
+                           inc=np.array(data['inc'])*-1,
+                           azim=np.array(data['azim']),
+                           surface_latitude=data['surface_latitude'],
+                           surface_longitude=data['surface_longitude']
+                           )
+
+            # create error raise
+            with self.assertRaises(ValueError) as cm:
+                error_func(data)
+            the_exception = cm.exception
+            #print(the_exception.args[0])
+            error_code = "Validation Error: INC array has negative values"
+            self.assertEqual(the_exception.args[0], error_code)
+
+    def test_azim_array_values(self):
+
+            current_dir = Path.cwd()
+            path = current_dir.parent / 'data'
+            json_path = path / 'wellbore_survey.json'
+
+            with open(json_path) as json_file:
+                data = json.load(json_file)
+            json_file.close()
+
+            # create directional survey object
+            # requires func for test
+            def error_func(data):
+                DataObject(wellId=data['wellId'],
+                           md=np.array(data['md']),
+                           inc=np.array(data['inc']),
+                           azim=np.array(data['azim'])*10,
+                           surface_latitude=data['surface_latitude'],
+                           surface_longitude=data['surface_longitude']
+                           )
+
+            # create error raise
+            with self.assertRaises(ValueError) as cm:
+                error_func(data)
+            the_exception = cm.exception
+            #print(the_exception.args[0])
+            error_code = "Validation Error: AZIM array must have values between 0 and 360"
+            self.assertEqual(the_exception.args[0], error_code)
 #
 if __name__ == '__main__':
     unittest.main()
