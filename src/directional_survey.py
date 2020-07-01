@@ -1,11 +1,8 @@
-from src.core import *
 from src.utils import *
-from src.dataclass import *
-#import json
-from scipy.ndimage.interpolation import shift
+from src.data_object import *
 
-
-class Survey:
+# put in data object
+class DirectionalSurvey():
     """
     Get information about a directional survey from dict or dataclass obj
     and reformat into directional survey obj
@@ -13,26 +10,11 @@ class Survey:
 
     def __init__(self, directional_survey_data):
         """
-        Survey object with a wells directional survey info
+        DirectionalSurvey object with a wells directional survey info
 
         Attributes:
-        directional_survey_points (Dataclass Object) DirectionalSurvey object
+        directional_survey_points (Dataclass Object) DataObject object
         """
-
-        # data can come in dict or dataclass obj format
-        # TODO: do I want to allow for any dict or defined dataclass, or just a dataclass obj
-        # if is_dict(directional_survey_data) is True:
-        #     # convert survey dict into its dataclass obj then into its survey obj
-        #     directional_survey = DirectionalSurvey(**directional_survey_data)
-        #     self.directional_survey_points = directional_survey
-        # else:
-        #     # convert dataclass obj to is survey obj
-        #     self.directional_survey_points = directional_survey_data
-
-        # if kwargs is None:
-        #     self.directional_survey_points = directional_survey_data
-        # else:
-        #     self.directional_survey_points = (directional_survey_data, kwargs)
 
         self.directional_survey_points = directional_survey_data
 
@@ -181,7 +163,7 @@ class Survey:
         None
 
         :return:
-        survey_points_obj:       (Survey obj)
+        survey_points_obj:       (DirectionalSurvey obj)
 
         """
 
@@ -196,28 +178,28 @@ class Survey:
 
         inc_hz = self.calculate_horizontal()
 
-        directional_survey = DirectionalSurvey(wellId=self.directional_survey_points.wellId,
-                                               md=self.directional_survey_points.md,
-                                               inc=self.directional_survey_points.inc,
-                                               azim=self.directional_survey_points.azim,
-                                               surface_latitude=self.directional_survey_points.surface_latitude,
-                                               surface_longitude=self.directional_survey_points.surface_longitude,
-                                               e_w_deviation=e_w_deviation,
-                                               n_s_deviation=n_s_deviation,
-                                               tvd=tvd_cum,
-                                               dls=dls,
-                                               longitude_points=longitude_points,
-                                               latitude_points=latitude_points,
-                                               zone_number=zone_number,
-                                               zone_letter=zone_letter,
-                                               x_points=x_points,
-                                               y_points=y_points,
-                                               surface_x=surface_x,
-                                               surface_y=surface_y,
-                                               isHorizontal=inc_hz
-                                               )
+        directional_survey = DataObject(wellId=self.directional_survey_points.wellId,
+                                        md=self.directional_survey_points.md,
+                                        inc=self.directional_survey_points.inc,
+                                        azim=self.directional_survey_points.azim,
+                                        surface_latitude=self.directional_survey_points.surface_latitude,
+                                        surface_longitude=self.directional_survey_points.surface_longitude,
+                                        e_w_deviation=e_w_deviation,
+                                        n_s_deviation=n_s_deviation,
+                                        tvd=tvd_cum,
+                                        dls=dls,
+                                        longitude_points=longitude_points,
+                                        latitude_points=latitude_points,
+                                        zone_number=zone_number,
+                                        zone_letter=zone_letter,
+                                        x_points=x_points,
+                                        y_points=y_points,
+                                        surface_x=surface_x,
+                                        surface_y=surface_y,
+                                        isHorizontal=inc_hz
+                                        )
         # convert to survey obj
-        survey_points_obj = Survey(directional_survey)
+        survey_points_obj = DirectionalSurvey(directional_survey)
 
         return survey_points_obj
 
