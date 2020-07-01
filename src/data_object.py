@@ -1,13 +1,10 @@
 from src.core import *
 
-#from dataclasses import dataclass, field
-#import numpy as np
-
 
 @dataclass
-class DirectionalSurvey:
+class DataObject(metaclass=abc.ABCMeta):
     """
-    Dataclass for Directional Survey Points, takes a list of dictionaries and converts them into np.arrays
+    Dataclass for Directional DirectionalSurvey Points, takes a list of dictionaries and converts them into np.arrays
     The data class accepts common directional survey params, some are required. Using the required inputs
     a minimum curvature algorithim will be applied to the data, providing latitude and longitude points
     along the wellbore and additional useful parameters.
@@ -44,7 +41,7 @@ class DirectionalSurvey:
                         a local prime meridian to the meridian through the point.
 
     Returns:
-    dataclass obj:      Dataclass Directional Survey object
+    dataclass obj:      Dataclass Directional DirectionalSurvey object
     """
 
     # TODO: enforce md, inc, and azim to be same length
@@ -75,12 +72,57 @@ class DirectionalSurvey:
     longitude_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
     isHorizontal: np.ndarray = field(default=None, metadata={'unit': 'str'})
 
+    #@abc.abstractmethod
+    def validate_array_length(self):
+        """
+
+        :return:
+        """
+        md_len = len(self.md)
+        inc_len = len(self.inc)
+        azim_len = len(self.azim)
+
+        if inc_len == md_len and azim_len == md_len:
+            pass
+        else:
+            raise ValueError(f"Validation Error: Array lengths must be equal,"
+                             f" md length: `{md_len}` md length: `{inc_len}` md length: `{azim_len}`")
+
+    def validate_array_sign(self):
+        """
+
+        :return:
+        """
+
+        if any(neg < 0 for neg in self.md) is False:
+            pass
+        else:
+            raise ValueError(f"Validation Error: MD array has negative values")
+        if any(neg < 0 for neg in self.inc) is False:
+            pass
+        else:
+            raise ValueError(f"Validation Error: INC array has negative values")
+
+    def validate_azim_values(self):
+        """
+
+        :return:
+        """
+        #TODO correct the azim to be between 0 and 360
+        if any(i > 360 or i < 0 for i in self.azim) is False:
+            pass
+        else:
+            raise ValueError(f"Validation Error: AZIM array must have values between 0 and 360")
+
+
+
     def __post_init__(self):
         """
         look in all fields and types,
         if type is None pass,
         else if type given doesnt match dataclass type raise error
         """
+
         for (name, field_type) in self.__annotations__.items():
             if not isinstance(self.__dict__[name], field_type):
                 current_type = type(self.__dict__[name])
@@ -88,3 +130,6 @@ class DirectionalSurvey:
                     pass
                 else:
                     raise ValueError(f"The field `{name}` was assigned by `{current_type}` instead of `{field_type}`")
+        self.validate_array_length()
+        self.validate_array_sign()
+        self.validate_azim_values()
