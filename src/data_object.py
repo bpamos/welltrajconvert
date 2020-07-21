@@ -72,6 +72,9 @@ class DataObject(metaclass=abc.ABCMeta):
     longitude_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
     isHorizontal: np.ndarray = field(default=None, metadata={'unit': 'str'})
 
+
+
+
     #@abc.abstractmethod
     def validate_array_length(self):
         """
