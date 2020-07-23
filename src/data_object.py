@@ -1,138 +1,180 @@
 from src.core import *
 
 
-@dataclass
 class DataObject(metaclass=abc.ABCMeta):
     """
-    Dataclass for Directional DirectionalSurvey Points, takes a list of dictionaries and converts them into np.arrays
-    The data class accepts common directional survey params, some are required. Using the required inputs
-    a minimum curvature algorithim will be applied to the data, providing latitude and longitude points
-    along the wellbore and additional useful parameters.
-    Intended to be run per well.
+    Info
 
-    Args:
-    wellId:             (required) Unique well identification id
-    md:                 (required) measured depth  is the actual depth of the hole drilled to any point along 
-                        the wellbore or to total depth, as measured from the surface location
-    inc:                (required) inclination angle, the angular measurement that the borehole deviates from vertical.
-    azim:               (required) azimuth degrees, the hole direction is measured in degrees (0 to 360°)
-    tvd:                true vertical depth from surface to the survey point.
-    n_s_deviation:      north south deviation for each point in the wellbore path.
-    x_offset:           The X offset for each point in the bore path.
-    e_w_deviation:      east west deviation for each point in the wellbore path.
-    y_offset:           The Y offset for each point in the wellbore path.
-    dls:                Dogleg severity is a measure of the change in direction of a wellbore 
-                        over a defined length, measured in degrees per 100 feet of length.
-    surface_latitude:   (required) surface hole latitude
-    surface_longitude:  (required) surface hole longitude
-    surface_x:          Surface Easting component of the UTM coordinate
-    surface_y:          Surface Northing component of the UTM coordinate
-    x_points:           Easting component of the UTM coordinate
-    y_points:           Northing component of the UTM coordinate
-    zone_number:        Zone number of the UTM coordinate
-    zone_letter:        Zone letter of the UTM coordinate
-    latitude_points:    The latitude value of a location in the borehole.
-                        A positive value denotes north.
-                        Angle subtended with equatorial plane by a perpendicular
-                        from a point on the surface of a spheriod.
-    longitude_points:   The longitude value of a location in a borehole.
-                        A positive value denotes east.
-                        Angle measured about the spheroid axis from
-                        a local prime meridian to the meridian through the point.
-
-    Returns:
-    dataclass obj:      Dataclass Directional DirectionalSurvey object
     """
+    def __init__(self, wellId: str, md: list, inc: list, azim: list,
+                 surface_latitude: float, surface_longitude: float,
+                 tvd: list = None, n_s_deviation: list = None, e_w_deviation: list = None, dls: list = None,
+                 surface_x: float = None, surface_y: float = None, x_points: list = None, y_points: list = None,
+                 zone_number: int = None, zone_letter: str = None,
+                 latitude_points: list = None, longitude_points: list = None, isHorizontal: list = None):
 
-    # TODO: enforce md, inc, and azim to be same length
-    # TODO: enforce md to be postitive, inc to be between 0 and 100, azim to be between 0 and 360
-    # TODO: enforce lat and lon to be between some values as well.
-    wellId: str
-    md: np.ndarray
-    inc: np.ndarray
-    azim: np.ndarray
-    surface_latitude: float
-    surface_longitude: float
-    tvd: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    n_s_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    ## n_s: np.ndarray = field(default=None, metadata={'unit': 'str'}) # not used, remove?
-    ## x_offset: np.ndarray = field(default=None, metadata={'unit': 'float'}) # not used, remove?
-    e_w_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    ## e_w: np.ndarray = field(default=None, metadata={'unit': 'str'}) # not used, remove?
-    ## y_offset: np.ndarray = field(default=None, metadata={'unit': 'float'}) # not used, remove?
-    # TODO: dls looks like build rate with no negatives (look into)
-    dls: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    surface_x: float = field(default=None, metadata={'unit': 'float'})
-    surface_y: float = field(default=None, metadata={'unit': 'float'})
-    x_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    y_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    zone_number: int = field(default=None, metadata={'unit': 'int'})
-    zone_letter: str = field(default=None, metadata={'unit': 'str'})
-    latitude_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    longitude_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    isHorizontal: np.ndarray = field(default=None, metadata={'unit': 'str'})
+        self.wellId = wellId
+        self.md = md
+        self.inc = inc
+        self.azim = azim
+        self.surface_latitude = surface_latitude
+        self.surface_longitude = surface_longitude
+        self.tvd = tvd
+        self.n_s_deviation = n_s_deviation
+        self.e_w_deviation = e_w_deviation
+        self.dls = dls
+        self.surface_x = surface_x
+        self.surface_y = surface_y
+        self.x_points = x_points
+        self.y_points = y_points
+        self.zone_number = zone_number
+        self.zone_letter = zone_letter
+        self.latitude_points = latitude_points
+        self.longitude_points = longitude_points
+        self.isHorizontal = isHorizontal
 
+    @abstractmethod
+    def validate(self):
+        """
+        validate different variables to ensure data put in
+        will work with the directional survey functions
 
-
-
-    #@abc.abstractmethod
-    def validate_array_length(self):
         """
 
-        :return:
-        """
-        md_len = len(self.md)
-        inc_len = len(self.inc)
-        azim_len = len(self.azim)
+        # a bunch of validation functions
+        def validate_array_length(self):
+            """
+            validate the length of the array,
+            ensure md, inc, and azim are equal lengths
 
-        if inc_len == md_len and azim_len == md_len:
-            pass
-        else:
-            raise ValueError(f"Validation Error: Array lengths must be equal,"
-                             f" md length: `{md_len}` md length: `{inc_len}` md length: `{azim_len}`")
+            :return: pass or ValueError
+            """
+            md_len = len(self.md)
+            inc_len = len(self.inc)
+            azim_len = len(self.azim)
+            if inc_len == md_len and azim_len == md_len:
+                pass
+            else:
+                raise ValueError(f"Validation Error: Array lengths must be equal,"
+                                 f" md length: `{md_len}` md length: `{inc_len}` md length: `{azim_len}`")
 
-    def validate_array_sign(self):
-        """
+        def validate_array_sign(self):
+            """
+            validate md and inc are not negative
 
-        :return:
-        """
+            :return: pass of ValueError
+            """
 
-        if any(neg < 0 for neg in self.md) is False:
-            pass
-        else:
-            raise ValueError(f"Validation Error: MD array has negative values")
-        if any(neg < 0 for neg in self.inc) is False:
-            pass
-        else:
-            raise ValueError(f"Validation Error: INC array has negative values")
+            if any(neg < 0 for neg in self.md) is False:
+                pass
+            else:
+                raise ValueError(f"Validation Error: MD array has negative values")
+            if any(neg < 0 for neg in self.inc) is False:
+                pass
+            else:
+                raise ValueError(f"Validation Error: INC array has negative values")
 
-    def validate_azim_values(self):
-        """
+        def validate_lat_long_range(self):
+            """
+            validate that the surface lat and long are between the acceptable ranges
 
-        :return:
-        """
-        #TODO correct the azim to be between 0 and 360
-        if any(i > 360 or i < 0 for i in self.azim) is False:
-            pass
-        else:
-            raise ValueError(f"Validation Error: AZIM array must have values between 0 and 360")
+            :return: pass of ValueError
+            """
 
+            if -90 <= self.surface_latitude <= 90:
+                pass
+            else:
+                raise ValueError(f"Validation Error: surface_latitude has values outside acceptable range")
 
+            if -180 <= self.surface_longitude <= 180:
+                pass
+            else:
+                raise ValueError(f"Validation Error: surface_longitude has values outside acceptable range")
 
-    def __post_init__(self):
-        """
-        look in all fields and types,
-        if type is None pass,
-        else if type given doesnt match dataclass type raise error
-        """
+        # TODO: is this the correct way to test this.
+        def validate_wellId(self):
+            """
+            validate that wellId is a string, it needs to be a single wellId value
+            not a list or array of wellIds
 
-        for (name, field_type) in self.__annotations__.items():
-            if not isinstance(self.__dict__[name], field_type):
-                current_type = type(self.__dict__[name])
-                if current_type is type(None):
-                    pass
-                else:
-                    raise ValueError(f"The field `{name}` was assigned by `{current_type}` instead of `{field_type}`")
-        self.validate_array_length()
-        self.validate_array_sign()
-        self.validate_azim_values()
+            :return: pass or TypeError
+            """
+            wellId_type = type(self.wellId)
+            if wellId_type is str:
+                pass
+            else:
+                raise TypeError(f"Validation Error: wellId has type {wellId_type}")
+
+        def validate_array_monotonic(self):
+            """
+            check if array is monotonically increasing,
+            always increasing of staying the same
+
+            :return: True or ValueError
+            """
+
+            # get the diff between each element
+            dx = np.diff(self.md)
+            # if they are greater than
+            if np.all(dx <= 0) or np.all(dx >= 0) == True:
+                pass
+            else:
+                raise ValueError(f"Validation Error: MD array must monotonically increase")
+
+        # TODO: validation for Azim between 360 and 0, if not correct it
+        # TODO: validation for Inc between 0 and 90 (or 100)?
+
+        # run validation functions
+        validate_array_length(self)
+        validate_array_sign(self)
+        validate_wellId(self)
+        validate_lat_long_range(self)
+        validate_array_monotonic(self)
+
+    @abstractmethod
+    def serialize(self):
+
+        # TODO: make this one line, if not present pass, else turn to array
+        # self.tvd = ifnone('None',np.array(self.tvd))
+
+        self.wellId = self.wellId
+        self.md = np.array(self.md)
+        self.inc = np.array(self.inc)
+        self.azim = np.array(self.azim)
+        self.surface_latitude = self.surface_latitude
+        self.surface_longitude = self.surface_longitude
+        # self.tvd = np.array(self.tvd)
+        if self.tvd is not None:
+            self.tvd = np.array(self.tvd)
+        # self.n_s_deviation = np.array(self.n_s_deviation)
+        if self.n_s_deviation is not None:
+            self.n_s_deviation = np.array(self.n_s_deviation)
+        #self.e_w_deviation = np.array(self.e_w_deviation)
+        if self.e_w_deviation is not None:
+            self.e_w_deviation = np.array(self.e_w_deviation)
+        # self.dls = np.array(self.dls)
+        if self.dls is not None:
+            self.dls = np.array(self.dls)
+
+        self.surface_x = self.surface_x
+        self.surface_y = self.surface_y
+
+        # self.x_points = np.array(self.x_points)
+        if self.x_points is not None:
+            self.x_points = np.array(self.x_points)
+        # self.y_points = np.array(self.y_points)
+        if self.y_points is not None:
+            self.y_points = np.array(self.y_points)
+
+        self.zone_number = self.zone_number
+        self.zone_letter = self.zone_letter
+
+        # self.latitude_points = np.array(self.latitude_points)
+        if self.latitude_points is not None:
+            self.latitude_points = np.array(self.latitude_points)
+        # self.longitude_points = np.array(self.longitude_points)
+        if self.longitude_points is not None:
+            self.longitude_points = np.array(self.longitude_points)
+        # self.isHorizontal = np.array(self.isHorizontal)
+        if self.isHorizontal is not None:
+            self.isHorizontal = np.array(self.isHorizontal)
