@@ -7,10 +7,11 @@ from copy import copy,deepcopy
 from pathlib import Path
 from collections import OrderedDict,defaultdict,Counter,namedtuple
 from collections.abc import Iterable,Iterator,Generator,Sequence
-from typing import Union,Optional
+from typing import Union,Optional, Any
 
 # External modules
 from pandas.api.types import is_categorical_dtype,is_numeric_dtype
+from pandas import Series, DataFrame
 from numpy import array,ndarray
 
 
