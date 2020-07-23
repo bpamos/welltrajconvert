@@ -1,9 +1,15 @@
-from src.imports import *
+from src.utils import *
 
 
 class DataObject(metaclass=abc.ABCMeta):
     """
-    Info
+    DataObject takes required parameters from a single directional survey.
+    DataObject parameters must come in a specific format
+    Intended for a single directional survey at a time.
+
+    :parameter:
+
+    :returns:
 
     """
     def __init__(self, wellId: str, md: list, inc: list, azim: list,
@@ -13,12 +19,12 @@ class DataObject(metaclass=abc.ABCMeta):
                  zone_number: int = None, zone_letter: str = None,
                  latitude_points: list = None, longitude_points: list = None, isHorizontal: list = None):
 
-        self.wellId = wellId
-        self.md = md
-        self.inc = inc
-        self.azim = azim
-        self.surface_latitude = surface_latitude
-        self.surface_longitude = surface_longitude
+        self.wellId = wellId                        # required
+        self.md = md                                # required
+        self.inc = inc                              # required
+        self.azim = azim                            # required
+        self.surface_latitude = surface_latitude    # required
+        self.surface_longitude = surface_longitude  # required
         self.tvd = tvd
         self.n_s_deviation = n_s_deviation
         self.e_w_deviation = e_w_deviation
@@ -38,7 +44,6 @@ class DataObject(metaclass=abc.ABCMeta):
         """
         validate different variables to ensure data put in
         will work with the directional survey functions
-
         """
 
         # a bunch of validation functions
@@ -133,48 +138,36 @@ class DataObject(metaclass=abc.ABCMeta):
 
     @abstractmethod
     def serialize(self):
+        """
+        convert dict values to their proper serialized dict values
+        converts lists to np.arrays if not None
+        converts value to float if not None
+        converts value to int if not None
+        converts value to str if not None
 
-        # TODO: make this one line, if not present pass, else turn to array
-        # self.tvd = ifnone('None',np.array(self.tvd))
+        :parameter:
+        DataObject params
 
-        self.wellId = self.wellId
+        :return:
+        DataObject params serialized as floats, str, int, or np.arrays
+        """
+
+        self.wellId = to_str(self.wellId)
         self.md = np.array(self.md)
         self.inc = np.array(self.inc)
         self.azim = np.array(self.azim)
-        self.surface_latitude = self.surface_latitude
-        self.surface_longitude = self.surface_longitude
-        # self.tvd = np.array(self.tvd)
-        if self.tvd is not None:
-            self.tvd = np.array(self.tvd)
-        # self.n_s_deviation = np.array(self.n_s_deviation)
-        if self.n_s_deviation is not None:
-            self.n_s_deviation = np.array(self.n_s_deviation)
-        #self.e_w_deviation = np.array(self.e_w_deviation)
-        if self.e_w_deviation is not None:
-            self.e_w_deviation = np.array(self.e_w_deviation)
-        # self.dls = np.array(self.dls)
-        if self.dls is not None:
-            self.dls = np.array(self.dls)
-
-        self.surface_x = self.surface_x
-        self.surface_y = self.surface_y
-
-        # self.x_points = np.array(self.x_points)
-        if self.x_points is not None:
-            self.x_points = np.array(self.x_points)
-        # self.y_points = np.array(self.y_points)
-        if self.y_points is not None:
-            self.y_points = np.array(self.y_points)
-
-        self.zone_number = self.zone_number
-        self.zone_letter = self.zone_letter
-
-        # self.latitude_points = np.array(self.latitude_points)
-        if self.latitude_points is not None:
-            self.latitude_points = np.array(self.latitude_points)
-        # self.longitude_points = np.array(self.longitude_points)
-        if self.longitude_points is not None:
-            self.longitude_points = np.array(self.longitude_points)
-        # self.isHorizontal = np.array(self.isHorizontal)
-        if self.isHorizontal is not None:
-            self.isHorizontal = np.array(self.isHorizontal)
+        self.surface_latitude = to_float(self.surface_latitude)
+        self.surface_longitude = to_float(self.surface_longitude)
+        self.tvd = to_array(self.tvd)
+        self.n_s_deviation = to_array(self.n_s_deviation)
+        self.e_w_deviation = to_array(self.e_w_deviation)
+        self.dls = to_array(self.dls)
+        self.surface_x = to_float(self.surface_x)
+        self.surface_y = to_float(self.surface_y)
+        self.x_points = to_array(self.x_points)
+        self.y_points = to_array(self.y_points)
+        self.zone_number = to_int(self.zone_number)
+        self.zone_letter = to_str(self.zone_letter)
+        self.latitude_points = to_array(self.latitude_points)
+        self.longitude_points = to_array(self.longitude_points)
+        self.isHorizontal = to_array(self.isHorizontal)
