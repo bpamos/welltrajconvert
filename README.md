@@ -1,7 +1,9 @@
 # directional-survey-converter
 
 The directional-survey-converter library allows the user to take the bare minimum required wellbore survey information and convert that into its latitude and longitude points along the wellbore and a host of other common parameters.
+
 The directional-survey-converter requires the wellId, measured depth, inclination angle, azimuth degrees, surface_latitude, and surface_longitude points to calculate various points along the wellbore using a minimum curvature algorithm.
+
 The directional-survey-converter calculates the following points along the wellbore latitude_points, longitude_points, x_points, y_points, surface_x, surface_y, dogleg severity, tvd, and a categorical array defining if the well is horizontal or not.
 
 
