@@ -1,21 +1,20 @@
 
-import io,operator,sys,os,re,mimetypes,csv,itertools,json,shutil,glob,pickle,tarfile,collections
-import hashlib,itertools,types,inspect,functools,random,time,math,bz2,typing,numbers,string
+import os, pickle, sys
 
-
-from copy import copy,deepcopy
-from pathlib import Path
-from collections import OrderedDict,defaultdict,Counter,namedtuple
-from collections.abc import Iterable,Iterator,Generator,Sequence
-from typing import Union,Optional, Any
+import abc, json, pathlib, inspect
+from abc import abstractmethod
+from dataclasses import dataclass, field
 
 # External modules
-from pandas.api.types import is_categorical_dtype,is_numeric_dtype
+import matplotlib.pyplot as plt, numpy as np, pandas as pd
+from pathlib import Path
 from pandas import Series, DataFrame
-from numpy import array,ndarray
+from scipy.ndimage.interpolation import shift
+# for utm conversion
+import utm
 
-
-# def is_coll(o):
-#     "Test whether `o` is a collection (i.e. has a usable `len`)"
-#     #Rank 0 tensors in PyTorch do not have working `len`
-#     return hasattr(o, '__len__') and getattr(o,'ndim',1)
+# for type annotations
+#from numbers import Number
+from typing import Any, Dict, List, Optional
+# from typing import Any, AnyStr, Callable, Collection, Dict, Hashable, Iterator, List, Mapping, NewType, Optional
+# from typing import Sequence, Tuple, TypeVar, Union

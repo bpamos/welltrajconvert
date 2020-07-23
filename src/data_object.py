@@ -1,4 +1,4 @@
-from src.core import *
+from src.imports import *
 
 
 class DataObject(metaclass=abc.ABCMeta):

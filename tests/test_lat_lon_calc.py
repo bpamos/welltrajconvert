@@ -1,4 +1,3 @@
-from src.directional_survey import *
 import unittest
 from src.transforms import *
 from src.wellbore_trajectory import *

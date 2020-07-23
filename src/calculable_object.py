@@ -1,6 +1,4 @@
-from src.data_object import *
 from src.deviation_survey import *
-
 
 
 class CalculableObject(DataObject):
@@ -22,7 +20,6 @@ class CalculableObject(DataObject):
     def serialize(self):
         super().serialize()
 
-    # @abstractmethod
     def minimum_curvature_algo(self):
         """
         Calculate values along the wellbore using only provided md, inc, and azim
@@ -98,7 +95,6 @@ class CalculableObject(DataObject):
         self.deviation_survey_obj.e_w_deviation = e_w_deviation
         self.deviation_survey_obj.n_s_deviation = n_s_deviation
 
-    # @abstractmethod
     def calculate_lat_lon_from_deviation_points(self):
         """
         get lat lon points from survey using minimum curvature algorithm generated values
@@ -147,7 +143,6 @@ class CalculableObject(DataObject):
         self.deviation_survey_obj.surface_x = surface_x
         self.deviation_survey_obj.surface_y = surface_y
 
-    # @abstractmethod
     def calculate_horizontal(self):
         """
         calculate if the inclination of the wellbore is in its horizontal section

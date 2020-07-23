@@ -1,6 +1,4 @@
-from src.utils import *
 from src.data_object import *
-
 
 
 @dataclass
@@ -73,11 +71,9 @@ class DeviationSurvey(DataObject):
 
     def validate(self):
         super().validate()
-        print('we did it')
 
     def serialize(self):
         super().serialize()
-
 
     def __post_init__(self):
         """

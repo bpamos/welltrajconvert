@@ -1,14 +1,12 @@
+from .base import *
 
-from .foundation import *
 
-# Cell
 def _get_files(p, fs, extensions=None):
     p = Path(p)
     res = [p/f for f in fs if not f.startswith('.')
            and ((not extensions) or f'.{f.split(".")[-1].lower()}' in extensions)]
     return res
 
-# Cell
 def get_files(path, extensions=None, recurse=True, folders=None, followlinks=True):
     "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
     path = Path(path)
@@ -27,8 +25,7 @@ def get_files(path, extensions=None, recurse=True, folders=None, followlinks=Tru
         res = _get_files(path, f, extensions)
     return L(res)
 
-
-def get_text_files(path, recurse=True, folders=None):
-    "Get text files in `path` recursively, only in `folders`, if specified."
-    return get_files(path, extensions=['.txt'], recurse=recurse, folders=folders)
+# def get_text_files(path, recurse=True, folders=None):
+#     "Get text files in `path` recursively, only in `folders`, if specified."
+#     return get_files(path, extensions=['.txt'], recurse=recurse, folders=folders)
 
