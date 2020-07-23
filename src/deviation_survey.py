@@ -4,13 +4,11 @@ from src.data_object import *
 @dataclass
 class DeviationSurvey(DataObject):
     """
-    Dataclass for Directional DirectionalSurvey Points, takes a list of dictionaries and converts them into np.arrays
-    The data class accepts common directional survey params, some are required. Using the required inputs
-    a minimum curvature algorithim will be applied to the data, providing latitude and longitude points
-    along the wellbore and additional useful parameters.
-    Intended to be run per well.
+    Dataclass for Directional DirectionalSurvey Points takes a single `DataObject` and validates and serializes it.
+    Then converts it into a Dataclass object of Deviation Survey points, ensuring that all the correct data types
+    are present for later calculations.
 
-    Args:
+    :parameter:
     wellId:             (required) Unique well identification id
     md:                 (required) measured depth  is the actual depth of the hole drilled to any point along
                         the wellbore or to total depth, as measured from the surface location
@@ -40,8 +38,8 @@ class DeviationSurvey(DataObject):
                         Angle measured about the spheroid axis from
                         a local prime meridian to the meridian through the point.
 
-    Returns:
-    dataclass obj:      Dataclass Directional DirectionalSurvey object
+    :returns:
+    dataclass obj:      Dataclass DirectionalSurvey object
     """
 
     wellId: str
@@ -77,6 +75,8 @@ class DeviationSurvey(DataObject):
 
     def __post_init__(self):
         """
+        validate all data,
+        serialized all validated data,
         look in all fields and types,
         if type is None pass,
         else if type given doesnt match dataclass type raise error

@@ -8,7 +8,10 @@ def _get_files(p, fs, extensions=None):
     return res
 
 def get_files(path, extensions=None, recurse=True, folders=None, followlinks=True):
-    "Get all the files in `path` with optional `extensions`, optionally with `recurse`, only in `folders`, if specified."
+    """
+    Get all the files in `path` with optional `extensions`,
+    optionally with `recurse`, only in `folders`, if specified.
+    """
     path = Path(path)
     folders=L(folders)
     extensions = setify(extensions)
