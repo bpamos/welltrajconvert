@@ -16,6 +16,7 @@ class WellboreTrajectory(CalculableObject):
     def calculate_survey_points(self):
         super().calculate_survey_points()
 
+
     def get_survey_df(self):
         """
         Convert survey object to dataframe
