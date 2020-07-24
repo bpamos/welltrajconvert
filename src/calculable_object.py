@@ -13,9 +13,11 @@ class CalculableObject(DataObject):
 
         self.deviation_survey_obj = DeviationSurvey(**deviation_survey_obj)
 
+    def deserialize(self):
+        super().deserialize()
+
     def validate(self):
         super().validate()
-        print('we did it')
 
     def serialize(self):
         super().serialize()
