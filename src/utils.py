@@ -2,7 +2,7 @@
 from src.imports import *
 
 
-def ifnone(a: Any, b: Any) -> Any:
+def if_none(a: Any, b: Any) -> Any:
     "`a` if `a` is not None, otherwise `b`."
     return b if a is None else a
 
