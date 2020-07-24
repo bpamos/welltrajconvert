@@ -13,9 +13,16 @@ class WellboreTrajectory(CalculableObject):
 
         self.deviation_survey_obj = DeviationSurvey(**deviation_survey_obj)
 
+    # TODO: not sure this is the right implementation, should this be somewhere else?
+    # using self here is confusing, I dont think it is correct.
+    def deserialize(self):
+        with open(self) as json_file:
+            data = json.load(json_file)
+        json_file.close()
+        return data
+
     def calculate_survey_points(self):
         super().calculate_survey_points()
-
 
     def get_survey_df(self):
         """
