@@ -50,11 +50,7 @@ class DeviationSurvey(DataObject):
     surface_longitude: float
     tvd: np.ndarray = field(default=None, metadata={'unit': 'float'})
     n_s_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    ## n_s: np.ndarray = field(default=None, metadata={'unit': 'str'}) # not used, remove?
-    ## x_offset: np.ndarray = field(default=None, metadata={'unit': 'float'}) # not used, remove?
     e_w_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    ## e_w: np.ndarray = field(default=None, metadata={'unit': 'str'}) # not used, remove?
-    ## y_offset: np.ndarray = field(default=None, metadata={'unit': 'float'}) # not used, remove?
     # TODO: dls looks like build rate with no negatives (look into)
     dls: np.ndarray = field(default=None, metadata={'unit': 'float'})
     surface_x: float = field(default=None, metadata={'unit': 'float'})

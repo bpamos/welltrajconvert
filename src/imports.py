@@ -14,7 +14,4 @@ from scipy.ndimage.interpolation import shift
 import utm
 
 # for type annotations
-#from numbers import Number
 from typing import Any, Dict, List, Optional
-# from typing import Any, AnyStr, Callable, Collection, Dict, Hashable, Iterator, List, Mapping, NewType, Optional
-# from typing import Sequence, Tuple, TypeVar, Union
