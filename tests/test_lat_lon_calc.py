@@ -1,36 +1,38 @@
-from src.directional_survey import *
+import unittest
+from src.transforms import *
+from src.wellbore_trajectory import *
 
 # Unit tests
 # TODO find out how to move this to the tests folder, having trouble with paths
-import unittest
-
 
 class TestLatLonCalc(unittest.TestCase):
 
     def test_lat_lon_calc(self):
         current_dir = Path.cwd()
-        path = current_dir.parent / 'data'
+        path = current_dir.parent
 
         # get wellbore df
-        file = path / 'wellbore_survey.csv'
+        file = path / 'data/wellbore_survey.csv'
         df = pd.read_csv(file, sep=',')
         df_lat_lon_orig = df[['latitude_decimal_deg', 'longitude_decimal_deg']]
 
         #get wellbore json
-        json_path = path / 'wellbore_survey.json'
 
-        with open(json_path) as json_file:
+        json_path = get_files(path, folders='data', extensions='.json')
+
+
+        with open(json_path[0]) as json_file:
             data = json.load(json_file)
         json_file.close()
 
         # get survey obj
-        survey_obj = Survey(data)
+        well_obj = WellboreTrajectory(data)
 
-        # run survey points calc
-        survey_points_obj = survey_obj.calculate_survey_points()
+        # calculate survey points
+        well_obj.calculate_survey_points()
 
         # convert to df
-        df_min_curve = Survey.get_survey_df(survey_points_obj)
+        df_min_curve = well_obj.get_survey_df()
 
         # merge original df (with official lat lon points) and calculated lat lon points
         df_test = pd.merge(df_min_curve, df_lat_lon_orig, left_index=True, right_index=True)
