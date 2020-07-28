@@ -85,7 +85,7 @@ class DeviationSurvey(DataObject):
                 pass
             else:
                 raise ValueError(f"Validation Error: Array lengths must be equal,"
-                                 f" md length: `{md_len}` md length: `{inc_len}` md length: `{azim_len}`")
+                                 f" md length: `{md_len}` inc length: `{inc_len}` azim length: `{azim_len}`")
 
         def validate_array_sign(self):
             """
@@ -152,6 +152,7 @@ class DeviationSurvey(DataObject):
 
         # TODO: validation for Azim between 360 and 0, if not correct it
         # TODO: validation for Inc between 0 and 90 (or 100)?
+        # TODO: no NaNs
 
         # run validation functions
         validate_array_length(self)
