@@ -28,3 +28,14 @@ def is_dict(obj):
         return True
     else:
         return False
+
+def crs_transformer(crs_out: str, crs_in: str, x: float, y: float):
+    """
+    takes a two crs and transforms x and y coordinates to latitude and longitude.
+    find the crs_in of interst at `https://epsg.io/`
+
+    """
+    transformer = Transformer.from_crs(crs_in, crs_out)
+    latitude, longitude = transformer.transform(x, y)
+
+    return latitude, longitude
