@@ -1,5 +1,6 @@
 from .imports import *
 
+
 # TODO: reduce to only what you will really need
 def setify(o): return o if isinstance(o, set) else set(L(o))
 
