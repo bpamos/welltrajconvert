@@ -44,8 +44,8 @@ class DeviationSurvey(DataObject):
     md: np.ndarray
     inc: np.ndarray
     azim: np.ndarray
-    surface_latitude: float
-    surface_longitude: float
+    surface_latitude: float = field(default=None, metadata={'unit': 'float'})
+    surface_longitude: float = field(default=None, metadata={'unit': 'float'})
     tvd: np.ndarray = field(default=None, metadata={'unit': 'float'})
     n_s_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
     e_w_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
@@ -109,16 +109,16 @@ class DeviationSurvey(DataObject):
 
             :return: pass of ValueError
             """
+            if self.surface_latitude is not None and self.surface_longitude is not None:
+                if -90 <= self.surface_latitude <= 90:
+                    pass
+                else:
+                    raise ValueError(f"Validation Error: surface_latitude has values outside acceptable range")
 
-            if -90 <= self.surface_latitude <= 90:
-                pass
-            else:
-                raise ValueError(f"Validation Error: surface_latitude has values outside acceptable range")
-
-            if -180 <= self.surface_longitude <= 180:
-                pass
-            else:
-                raise ValueError(f"Validation Error: surface_longitude has values outside acceptable range")
+                if -180 <= self.surface_longitude <= 180:
+                    pass
+                else:
+                    raise ValueError(f"Validation Error: surface_longitude has values outside acceptable range")
 
         # TODO: is this the correct way to test this.
         def validate_wellId(self):
