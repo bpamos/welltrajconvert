@@ -43,3 +43,12 @@ class L(CollBase):
         if (use_list is not None) or not _is_array(items):
             items = list(items) if use_list else _listify(items)
         super().__init__(items)
+
+def is_listy(x:Any)->bool: return isinstance(x, (tuple,list))
+
+def df_names_to_idx(names:IntsOrStrs, df:DataFrame):
+    "Return the column indexes of `names` in `df`."
+    if not is_listy(names): names = [names]
+    if isinstance(names[0], int): return names
+    return [df.columns.get_loc(c) for c in names]
+
