@@ -19,4 +19,8 @@ from pyproj import CRS
 from pyproj import Transformer
 
 # for type annotations
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union, Collection
+
+
+PathOrStr = Union[Path,str]
+IntsOrStrs = Union[int, Collection[int], str, Collection[str]]
