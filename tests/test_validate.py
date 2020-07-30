@@ -1,4 +1,5 @@
 import unittest
+from src.transforms import *
 from src.wellbore_trajectory import *
 
 current_dir = Path.cwd()
@@ -6,10 +7,21 @@ path = current_dir.parent
 json_path = path/'data/wellbore_survey.json'
 
 # Deserialize Json_Path
-with open(json_path) as json_file:
-    data = json.load(json_file)
-json_file.close()
+# with open(json_path) as json_file:
+#     data = json.load(json_file)
+# json_file.close()
 
+file_path = get_files(path, folders='data', extensions='.json')
+file_path = file_path.items[0]
+
+# with open(json_path[0]) as json_file:
+#     data = json.load(json_file)
+# json_file.close()
+#print(file_path)
+
+# get survey obj
+well_obj = WellboreTrajectory.from_json(file_path)
+data = well_obj.data
 
 class TestValidate(unittest.TestCase):
 

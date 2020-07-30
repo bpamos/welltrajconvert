@@ -18,15 +18,17 @@ class TestLatLonCalc(unittest.TestCase):
 
         #get wellbore json
 
-        json_path = get_files(path, folders='data', extensions='.json')
+        file_path = get_files(path, folders='data', extensions='.json')
+        file_path = file_path.items[0]
 
-
-        with open(json_path[0]) as json_file:
-            data = json.load(json_file)
-        json_file.close()
+        # with open(json_path[0]) as json_file:
+        #     data = json.load(json_file)
+        # json_file.close()
+        #print(file_path)
 
         # get survey obj
-        well_obj = WellboreTrajectory(data)
+        well_obj = WellboreTrajectory.from_json(file_path)
+        #well_obj = WellboreTrajectory(data)
 
         # calculate survey points
         well_obj.calculate_survey_points()
