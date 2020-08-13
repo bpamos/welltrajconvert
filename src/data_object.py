@@ -6,6 +6,9 @@ class DataObject(metaclass=abc.ABCMeta):
     A abstract base class to work with subclasses `DeviationSurvey` and `CalculableObject`.
 
     """
+    @abstractmethod
+    def from_json(self):
+        pass
 
     @abstractmethod
     def validate(self):

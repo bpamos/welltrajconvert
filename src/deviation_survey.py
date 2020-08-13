@@ -61,6 +61,9 @@ class DeviationSurvey(DataObject):
     longitude_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
     isHorizontal: np.ndarray = field(default=None, metadata={'unit': 'str'})
 
+    def from_json(self):
+        super().from_json()
+
     def deserialize(self):
         super().deserialize()
 
