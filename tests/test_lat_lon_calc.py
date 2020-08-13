@@ -33,8 +33,14 @@ class TestLatLonCalc(unittest.TestCase):
         # calculate survey points
         well_obj.calculate_survey_points()
 
+        # deserialize
+        json_ds = well_obj.deserialize()
+        # load and convert to df
+        json_ds_obj = json.loads(json_ds)
+        df_min_curve = pd.DataFrame(json_ds_obj)
         # convert to df
-        df_min_curve = well_obj.get_survey_df()
+        #df_min_curve = well_obj.get_survey_df()
+
 
         # merge original df (with official lat lon points) and calculated lat lon points
         df_test = pd.merge(df_min_curve, df_lat_lon_orig, left_index=True, right_index=True)

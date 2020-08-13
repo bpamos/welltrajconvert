@@ -29,7 +29,7 @@ class TestLatLonJsonComparison(unittest.TestCase):
         well_obj.calculate_survey_points()
 
         # deserialize data object
-        json_ds = well_obj.deserialize_json()
+        json_ds = well_obj.deserialize()
 
         #load json string
         json_ds = json.loads(json_ds)
