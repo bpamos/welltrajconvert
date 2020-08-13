@@ -102,6 +102,42 @@ class WellboreTrajectory(CalculableObject):
     def calculate_survey_points(self):
         super().calculate_survey_points()
 
+    def deserialize_json(self):
+        """
+        Convert survey object to deserialized json
+
+        :parameter:
+        None
+
+        :return:
+        json:      (json object)
+
+        """
+
+        json_obj = dict(wellId=str(self.deviation_survey_obj.wellId),
+                        md=list(self.deviation_survey_obj.md),
+                        inc=list(self.deviation_survey_obj.inc),
+                        azim=list(self.deviation_survey_obj.azim),
+                        tvd=list(self.deviation_survey_obj.tvd),
+                        e_w_deviation=list(self.deviation_survey_obj.e_w_deviation),
+                        n_s_deviation=list(self.deviation_survey_obj.n_s_deviation),
+                        dls=list(self.deviation_survey_obj.dls),
+                        surface_latitude=float(self.deviation_survey_obj.surface_latitude),
+                        surface_longitude=float(self.deviation_survey_obj.surface_longitude),
+                        longitude_points=list(self.deviation_survey_obj.longitude_points),
+                        latitude_points=list(self.deviation_survey_obj.latitude_points),
+                        zone_number=int(self.deviation_survey_obj.zone_number),
+                        zone_letter=str(self.deviation_survey_obj.zone_letter),
+                        x_points=list(self.deviation_survey_obj.x_points),
+                        y_points=list(self.deviation_survey_obj.y_points),
+                        surface_x=float(self.deviation_survey_obj.surface_x),
+                        surface_y=float(self.deviation_survey_obj.surface_y),
+                        isHorizontal=list(self.deviation_survey_obj.isHorizontal))
+
+        json_string = json.dumps(json_obj)
+
+        return json_string
+
     def get_survey_df(self):
         """
         Convert survey object to dataframe
