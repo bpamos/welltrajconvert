@@ -113,12 +113,14 @@ class DeviationSurvey(DataObject):
                 if -90 <= self.surface_latitude <= 90:
                     pass
                 else:
-                    raise ValueError(f"Validation Error: surface_latitude has values outside acceptable range")
+                    raise ValueError(f"Validation Error: surface_latitude"
+                                     f" has values outside acceptable range: {self.surface_latitude}")
 
                 if -180 <= self.surface_longitude <= 180:
                     pass
                 else:
-                    raise ValueError(f"Validation Error: surface_longitude has values outside acceptable range")
+                    raise ValueError(f"Validation Error: surface_longitude "
+                                     f"has values outside acceptable range: {self.surface_longitude}")
 
         # TODO: is this the correct way to test this.
         def validate_wellId(self):
@@ -144,8 +146,9 @@ class DeviationSurvey(DataObject):
 
             # get the diff between each element
             dx = np.diff(self.md)
-            # if they are greater than
-            if np.all(dx <= 0) or np.all(dx >= 0) == True:
+            # if they are greater than zero, then the array is always increasing in the positive direction
+            #if np.all(dx <= 0) or np.all(dx >= 0) == True:
+            if np.all(dx >= 0) == True:
                 pass
             else:
                 raise ValueError(f"Validation Error: MD array must monotonically increase")
