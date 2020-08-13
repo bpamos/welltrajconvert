@@ -1,9 +1,9 @@
 from src.deviation_survey import *
-
+#from src.utils import *
 
 class CalculableObject(DataObject):
 
-    def __init__(self, deviation_survey_obj):
+    def __init__(self, deviation_survey_obj, **kwargs):
         """
         DirectionalSurvey object with a wells directional survey info
 
@@ -13,12 +13,23 @@ class CalculableObject(DataObject):
 
         self.deviation_survey_obj = DeviationSurvey(**deviation_survey_obj)
 
+    def deserialize(self):
+        super().deserialize()
+
     def validate(self):
         super().validate()
-        print('we did it')
 
     def serialize(self):
         super().serialize()
+
+    #@classmethod
+    def crs_transform(self, crs_in: str):
+        crs_out = "EPSG:4326"
+
+        x = self.deviation_survey_obj.surface_x
+        y = self.deviation_survey_obj.surface_y
+        self.deviation_survey_obj.surface_latitude, self.deviation_survey_obj.surface_longitude = \
+            crs_transformer(crs_out=crs_out, crs_in=crs_in, x=x, y=y)
 
     def minimum_curvature_algo(self):
         """
@@ -143,7 +154,7 @@ class CalculableObject(DataObject):
         self.deviation_survey_obj.surface_x = surface_x
         self.deviation_survey_obj.surface_y = surface_y
 
-    def calculate_horizontal(self):
+    def calculate_horizontal(self,  horizontal_angle: Optional[float] = 88.0):
         """
         calculate if the inclination of the wellbore is in its horizontal section
         If the wellbore inclination is greater than 88 degrees the wellbore is horizontal
@@ -159,13 +170,13 @@ class CalculableObject(DataObject):
         inc = self.deviation_survey_obj.inc
 
         # inc greater than 88 deg is horizontal, else vertical
-        inc_hz = np.greater(inc, 88)
+        inc_hz = np.greater(inc, horizontal_angle)
         inc_hz = np.where((inc_hz == True), 'Horizontal', 'Vertical')
 
         self.deviation_survey_obj.isHorizontal = inc_hz
 
     @abstractmethod
-    def calculate_survey_points(self):
+    def calculate_survey_points(self, **kwargs):
         """
         Run the minimum_curvature_algo, calculate_lat_lon_from_deviation_points, and calculate_horizontal
         functions to calculate the wells lat lon points and other attributes from provided md, inc, azim
@@ -178,6 +189,11 @@ class CalculableObject(DataObject):
         survey_points_obj:       (DirectionalSurvey obj)
 
         """
+        for k,v in kwargs.items():
+            print(k,v)
+
+        if self.deviation_survey_obj.surface_latitude is None and self.deviation_survey_obj.surface_longitude is None:
+            self.crs_transform(**kwargs)
 
         # get minimum curvature points
         self.minimum_curvature_algo()

@@ -1,0 +1,3 @@
+wellId,var_type,name,top_depth,bottom_depth
+well_C,wellTop,top_A,1234,1450
+well_C,wellTop,top_B,1450,1625
