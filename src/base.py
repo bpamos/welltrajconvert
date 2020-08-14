@@ -2,13 +2,13 @@ from .imports import *
 
 
 # TODO: reduce to only what you will really need
-def setify(o): return o if isinstance(o, set) else set(L(o))
+def make_set(o): return o if isinstance(o, set) else set(L(o))
 
 
 def _is_array(x): return hasattr(x, '__array__') or hasattr(x, 'iloc')
 
 
-def _listify(o):
+def _list_like(o):
     if o is None: return []
     if isinstance(o, list): return o
     if isinstance(o, str) or _is_array(o): return [o]
@@ -41,14 +41,15 @@ class L(CollBase):
         if rest: items = (items,) + rest
         if items is None: items = []
         if (use_list is not None) or not _is_array(items):
-            items = list(items) if use_list else _listify(items)
+            items = list(items) if use_list else _list_like(items)
         super().__init__(items)
 
-def is_listy(x:Any)->bool: return isinstance(x, (tuple,list))
 
-def df_names_to_idx(names:IntsOrStrs, df:DataFrame):
+def is_list_like(x: Any) -> bool: return isinstance(x, (tuple, list))
+
+
+def df_names_to_idx(names: IntsOrStrs, df: DataFrame):
     "Return the column indexes of `names` in `df`."
-    if not is_listy(names): names = [names]
+    if not is_list_like(names): names = [names]
     if isinstance(names[0], int): return names
     return [df.columns.get_loc(c) for c in names]
-
