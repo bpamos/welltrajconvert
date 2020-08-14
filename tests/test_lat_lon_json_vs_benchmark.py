@@ -1,13 +1,10 @@
 import unittest
-from src.transforms import *
 from src.wellbore_trajectory import *
 
-# Unit tests
-# TODO find out how to move this to the tests folder, having trouble with paths
 
-class TestLatLonJsonComparison(unittest.TestCase):
+class TestLatLonJsonVSBenchmark(unittest.TestCase):
 
-    def test_lat_lon_json_comparision(self):
+    def test_lat_lon_json_vs_benchmark(self):
         current_dir = Path.cwd()
         path = current_dir.parent
 
@@ -17,10 +14,6 @@ class TestLatLonJsonComparison(unittest.TestCase):
             json_export = json.load(json_file)
         json_file.close()
 
-        #get wellbore json
-        #file_path = get_files(path, folders='data', extensions='.json')
-        #file_path = file_path.items[0]
-        #print(file_path)
         # get survey obj
         file_path = path/'data/wellbore_survey.json'
         well_obj = WellboreTrajectory.from_json(file_path)
