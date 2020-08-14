@@ -16,6 +16,22 @@ class WellboreTrajectory(CalculableObject):
         self.deviation_survey_obj = DeviationSurvey(**self.data)
 
     def crs_transform(self, crs_in: str):
+        """
+        If surface latitude and longitude are not provided and
+        only surface x and surface y are provided the crs_transform must be run.
+        This takes in a crs input and transforms the surface x y to surface lat lon,
+        in the WGS84 projection space.
+
+        find crs transform input here:
+        'https://epsg.io/'
+
+        :parameter:
+        crs_in (str): example input: 'EPSG:4326'
+
+        :return:
+        None
+
+        """
         crs_out = "EPSG:4326"
 
         x = self.deviation_survey_obj.surface_x
@@ -23,8 +39,7 @@ class WellboreTrajectory(CalculableObject):
         self.deviation_survey_obj.surface_latitude, self.deviation_survey_obj.surface_longitude = \
             crs_transformer(crs_out=crs_out, crs_in=crs_in, x=x, y=y)
 
-
-    def minimum_curvature_algo(self):
+    def minimum_curvature_algorithm(self):
         """
         Calculate values along the wellbore using only provided md, inc, and azim
         calculate TVD, n_s_deviation, e_w_deviation, and dls
@@ -147,7 +162,8 @@ class WellboreTrajectory(CalculableObject):
         self.deviation_survey_obj.surface_x = surface_x
         self.deviation_survey_obj.surface_y = surface_y
 
-    def calculate_horizontal(self,  horizontal_angle: Optional[float] = 88.0):
+    #TODO: get the angle value to work in **kwargs
+    def calculate_horizontal(self, horizontal_angle: Optional[float] = 88.0):
         """
         calculate if the inclination of the wellbore is in its horizontal section
         If the wellbore inclination is greater than 88 degrees the wellbore is horizontal
@@ -168,10 +184,9 @@ class WellboreTrajectory(CalculableObject):
 
         self.deviation_survey_obj.isHorizontal = inc_hz
 
-    #@abstractmethod
     def calculate_survey_points(self, **kwargs):
         """
-        Run the minimum_curvature_algo, calculate_lat_lon_from_deviation_points, and calculate_horizontal
+        Run the minimum_curvature_algorithm, calculate_lat_lon_from_deviation_points, and calculate_horizontal
         functions to calculate the wells lat lon points and other attributes from provided md, inc, azim
         and surface lat lon
 
@@ -182,95 +197,17 @@ class WellboreTrajectory(CalculableObject):
         survey_points_obj:       (DirectionalSurvey obj)
 
         """
-        for k,v in kwargs.items():
-            print(k,v)
+        for k, v in kwargs.items():
+            print(k, v)
 
         if self.deviation_survey_obj.surface_latitude is None and self.deviation_survey_obj.surface_longitude is None:
             self.crs_transform(**kwargs)
 
         # get minimum curvature points
-        self.minimum_curvature_algo()
+        self.minimum_curvature_algorithm()
 
         # get lat lon points
         self.calculate_lat_lon_from_deviation_points()
 
         # calc horizontal
         self.calculate_horizontal()
-
-
-    # @classmethod
-    # def from_df(cls, df, wellId_name: str = None, md_name: str = None,
-    #             inc_name: str = None, azim_name: str = None,
-    #             surface_latitude_name: Optional[str] = None,
-    #             surface_longitude_name: Optional[str] = None,
-    #             surface_x_name: Optional[str] = None,
-    #             surface_y_name: Optional[str] = None):
-    #     """
-    #     convert a well survey df into a list of dicts format used in `WellboreTrajectory`
-    #     User must specify column names for wellId, md, inc, azim, and either both
-    #     surface_latitude, surface_longitude, or both surface_x, surface_y
-    #
-    #     :Parameters:
-    #     df
-    #     wellId_name
-    #     md_name
-    #     inc_name
-    #     azim_name
-    #     surface_latitude_name
-    #     surface_longitude_name
-    #     surface_x_name
-    #     surface_y_name
-    #
-    #     :Return:
-    #     list of dicts
-    #
-    #     """
-    #     # if no column names are specified use 0:5 for dir survey obj
-    #     surface_latitude_name = if_none(surface_latitude_name, None)
-    #     surface_longitude_name = if_none(surface_longitude_name, None)
-    #     surface_x_name = if_none(surface_x_name, None)
-    #     surface_y_name = if_none(surface_y_name, None)
-    #
-    #     cols = list(df.columns)
-    #     # check to make sure no columns have NaN values
-    #     inputs = df.iloc[:,df_names_to_idx(cols, df)]
-    #     assert not inputs.isna().any().any(), f"You have NaN values in column(s) {cols} of your dataframe, please fix it."
-    #
-    #     if surface_latitude_name is not None and surface_longitude_name is not None:
-    #         dataclass_obj = dict(wellId=df[wellId_name][0],
-    #                              md=np.array(df[md_name]),
-    #                              inc=np.array(df[inc_name]),
-    #                              azim=np.array(df[azim_name]),
-    #                              surface_latitude=df[surface_latitude_name][0],
-    #                              surface_longitude=df[surface_longitude_name][0])
-    #
-    #     if surface_x_name is not None and surface_y_name is not None:
-    #         dataclass_obj = dict(wellId=df[wellId_name][0],
-    #                              md=np.array(df[md_name]),
-    #                              inc=np.array(df[inc_name]),
-    #                              azim=np.array(df[azim_name]),
-    #                              surface_x=df[surface_x_name][0],
-    #                              surface_y=df[surface_y_name][0])
-    #
-    #     res = cls(data=dataclass_obj)
-    #     return res
-    #
-    # @classmethod
-    # def from_csv(cls, path: PathOrStr, wellId_name: Optional[str] = None, md_name: Optional[str] = None,
-    #              inc_name: Optional[str] = None, azim_name: Optional[str] = None,
-    #              surface_latitude_name: Optional[str] = None,
-    #              surface_longitude_name: Optional[str] = None,
-    #              surface_x_name: Optional[str] = None,
-    #              surface_y_name: Optional[str] = None):
-    #
-    #     df = pd.read_csv(path, sep=',')
-    #
-    #     return cls.from_df(df, wellId_name=wellId_name, md_name=md_name,
-    #                        inc_name=inc_name, azim_name=azim_name,
-    #                        surface_latitude_name=surface_latitude_name,
-    #                        surface_longitude_name=surface_longitude_name,
-    #                        surface_x_name=surface_x_name,
-    #                        surface_y_name=surface_y_name)
-
-    # def calculate_survey_points(self):
-    #     super().calculate_survey_points()
