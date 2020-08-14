@@ -3,15 +3,15 @@ from src.deviation_survey import *
 
 class CalculableObject(DataObject):
 
-    def __init__(self, data=None, **kwargs):
+    def __init__(self, deviation_survey_obj, **kwargs):
         """
         DirectionalSurvey object with a wells directional survey info
 
         Attributes:
         directional_survey_points (Dataclass Object) DataObject object
         """
-        self.data = data
-        self.deviation_survey_obj = DeviationSurvey(**data)
+
+        self.deviation_survey_obj = deviation_survey_obj
 
     def validate(self):
         super().validate()
