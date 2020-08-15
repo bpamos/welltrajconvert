@@ -50,20 +50,59 @@ def to_type(a: Any, data_type):
     return None if a is None else data_type(a)
 
 
-def crs_transformer(crs_out: str, crs_in: str, x: float, y: float):
+def crs_transformer(crs_from: Any, crs_to: Any, x: Any, y: Any) -> tuple:
     """
-    takes a two crs and transforms x and y coordinates to latitude and longitude.
-    find the crs_in of interst at `https://epsg.io/`
+    Make a CRS Transformer and transform points between two coordinate systems.
+    Transform x and y points to latitude and longitude points from input and output projection systems.
+    Find the crs_to of interst at `https://epsg.io/`
 
+    :parameter:
+    -------
+    crs_from: Projection of input data
+    crs_to: Projection of output data
+    x: (scalar or array (numpy or python)) – Input x coordinate(s).
+    y: (scalar or array (numpy or python)) – Input y coordinate(s).
+
+    :return:
+    -------
+    latitude, longitude: tuple
+
+    :examples:
+    -------
+    # crs_to and crs_from as str
+    >>> crs_from = "EPSG:4326"
+    >>> crs_to='epsg:32638'
+    >>> x = 759587.93
+    >>> y = 3311661.86
+    >>> crs_transformer(crs_from,crs_to,x,y)
+    (29.899999999974757, 47.68000000020621)
+
+    # alternative, crs_from and crs_to can be ints
+    >>> crs_from = 4326
+    >>> crs_to=32638
+    >>> x = 759587.93
+    >>> y = 3311661.86
+    >>> crs_transformer(crs_from,crs_to,x,y)
+    (29.899999999974757, 47.68000000020621)
+
+    # x,y can be arrays.
+    >>> crs_out = "EPSG:4326"
+    >>> crs_in='epsg:32638'
+    >>> crs_out = 4326
+    >>> crs_in= 32638
+    >>> x = np.array([759587,759588])
+    >>> y = np.array([3311661,3311662])
+    >>> crs_transformer(crs_out,crs_in,x,y)
+    (array([29.90828684, 29.90829564]), array([47.68851095, 47.68852154]))
     """
-    transformer = Transformer.from_crs(crs_in, crs_out)
+    transformer = Transformer.from_crs(crs_to, crs_from)
     latitude, longitude = transformer.transform(x, y)
 
     return latitude, longitude
 
 
-def list_of_dicts_to_df(dict_list):
-    """takes a list of dicts and converts to a appended df"""
+def list_of_dicts_to_df(dict_list: dict) -> DataFrame:
+    """takes a list of dicts and converts to an appended df"""
     appended_df = pd.DataFrame()
     for i in dict_list:
         df_well_obj = pd.DataFrame(i)
