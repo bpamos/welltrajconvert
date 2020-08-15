@@ -65,8 +65,8 @@ class DeviationSurvey(DataObject):
     def from_json(self):
         super().from_json()
 
-    def deserialize(self):
-        super().deserialize()
+    def serialize(self):
+        super().serialize()
 
     def validate(self):
         """
@@ -167,9 +167,9 @@ class DeviationSurvey(DataObject):
         validate_lat_long_range(self)
         validate_array_monotonic(self)
 
-    def serialize(self):
+    def deserialize(self):
         """
-        convert dict values to their proper serialized dict values
+        convert dict values to their proper deserialized dict values
         converts lists to np.arrays if not None
         converts value to float if not None
         converts value to int if not None
@@ -179,7 +179,7 @@ class DeviationSurvey(DataObject):
         DataObject params
 
         :return:
-        DataObject params serialized as floats, str, int, or np.arrays
+        DataObject params deserialized as floats, str, int, or np.arrays
         """
 
         self.wellId = to_type(self.wellId, str)
@@ -211,7 +211,7 @@ class DeviationSurvey(DataObject):
         else if type given doesnt match dataclass type raise error
         """
         self.validate()
-        self.serialize()
+        self.deserialize()
         for (name, field_type) in self.__annotations__.items():
             if not isinstance(self.__dict__[name], field_type):
                 current_type = type(self.__dict__[name])
