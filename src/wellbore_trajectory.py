@@ -27,7 +27,7 @@ class WellboreTrajectory(CalculableObject):
 
         :parameter:
         -------
-        crs_in: str (ie. 'EPSG:4326')
+        crs_to: str (ie. 'EPSG:4326')
 
         :return:
         -------
@@ -45,7 +45,7 @@ class WellboreTrajectory(CalculableObject):
         ...    "surface_y": 3311661.864849136
         ... }
         >>> dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
-        >>> dev_obj.crs_transform(crs_in='epsg:32638') # requires `crs_transform`
+        >>> dev_obj.crs_transform(crs_to='epsg:32638') # requires `crs_transform`
         >>> dev_obj.deviation_survey_obj # view data obj
         # calculates the surface lat and long
         DeviationSurvey(
@@ -65,7 +65,7 @@ class WellboreTrajectory(CalculableObject):
         x = self.deviation_survey_obj.surface_x
         y = self.deviation_survey_obj.surface_y
         self.deviation_survey_obj.surface_latitude, self.deviation_survey_obj.surface_longitude = \
-            crs_transformer(crs_out=crs_out, crs_in=crs_in, x=x, y=y)
+            crs_transformer(crs_from=crs_out, crs_to=crs_in, x=x, y=y)
 
     def minimum_curvature_algorithm(self):
         """
@@ -243,7 +243,7 @@ class WellboreTrajectory(CalculableObject):
         ...    "surface_y": 3311661.864849136
         ... }
         >>> dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
-        >>> dev_obj.crs_transform(crs_in='epsg:32638') # requires `crs_transform`
+        >>> dev_obj.crs_transform(crs_to='epsg:32638') # requires `crs_transform`
         >>> dev_obj.minimum_curvature_algorithm() # requires min curve
         >>> dev_obj.calculate_lat_lon_from_deviation_points() # calc lat lon dev points
         >>> dev_obj.deviation_survey_obj # view data obj
@@ -369,7 +369,7 @@ class WellboreTrajectory(CalculableObject):
         ...    "surface_y": 3311661.864849136
         ... }
         >>> dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
-        >>> dev_obj.crs_transform(crs_in='epsg:32638') # requires `crs_transform`
+        >>> dev_obj.crs_transform(crs_to='epsg:32638') # requires `crs_transform`
         >>> dev_obj.calculate_survey_points() # runs through min curve algo, calc lat lon points, and calc horizontal
         >>> dev_obj.deviation_survey_obj # view data obj
         DeviationSurvey(
