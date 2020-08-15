@@ -17,8 +17,8 @@ class WellboreTrajectory(CalculableObject):
 
     def crs_transform(self, crs_in: str):
         """
-        If surface latitude and longitude are not provided and
-        only surface x and surface y are provided the crs_transform must be run.
+        If surface x and y are provied instead of surface latitude and longitude then
+        the crs_transform needs to be run.
         This takes in a crs input and transforms the surface x y to surface lat lon,
         in the WGS84 projection space.
 
@@ -26,10 +26,11 @@ class WellboreTrajectory(CalculableObject):
         'https://epsg.io/'
 
         :parameter:
-        crs_in: str
-        example input: 'EPSG:4326'
+        -------
+        crs_in: str (ie. 'EPSG:4326')
 
         :return:
+        -------
         None
 
         :examples:
@@ -69,7 +70,7 @@ class WellboreTrajectory(CalculableObject):
     def minimum_curvature_algorithm(self):
         """
         Calculate TVD, n_s_deviation, e_w_deviation, and dls values along the wellbore
-        using md, inc, and azim
+        using md, inc, and azim arrays
 
         :parameter:
         -------
@@ -173,8 +174,8 @@ class WellboreTrajectory(CalculableObject):
 
     def calculate_lat_lon_from_deviation_points(self):
         """
-        get lat lon points from survey using minimum curvature algorithm generated values
-        for the ns and ew deviations
+        get latitude and longitude points along the wellbore using the minimum curvature algorithm generated values
+        for the ns and ew deviations.
 
         :parameter:
         -------
@@ -292,17 +293,19 @@ class WellboreTrajectory(CalculableObject):
     # TODO: get the angle value to work in **kwargs
     def calculate_horizontal(self, horizontal_angle: Optional[float] = 88.0):
         """
-        calculate if the inclination of the wellbore is in its horizontal section
-        If the wellbore inclination is greater than 88 degrees the wellbore is horizontal
-        else the well is vertical
+        calculate if the inclination of the wellbore is in its horizontal section.
+        If the wellbore inclination is greater than 88 degrees then wellbore is horizontal
+        else the well is vertical.
 
         :parameter:
+        -------
         None
 
         :return:
-        inc_hz:     (np.array)
+        -------
+        inc_hz: np.array
         """
-        inc = self.deviation_survey_obj.inc # get inc points
+        inc = self.deviation_survey_obj.inc  # get inc points
 
         # inc greater than 88 deg is horizontal, else vertical
         inc_hz = np.greater(inc, horizontal_angle)
@@ -313,14 +316,16 @@ class WellboreTrajectory(CalculableObject):
     def calculate_survey_points(self, **kwargs):
         """
         Run the minimum_curvature_algorithm, calculate_lat_lon_from_deviation_points, and calculate_horizontal
-        functions to calculate the wells lat lon points and other attributes from provided md, inc, azim
-        and surface lat lon
+        methods to calculate the wells lat lon points and other attributes from provided md, inc, azim
+        and surface lat lon or surface x y.
 
         :parameter:
+        -------
         None
 
         :return:
-        survey_points_obj:       (DirectionalSurvey obj)
+        -------
+        survey_points_obj: DirectionalSurvey obj
 
         :examples:
         -------
@@ -354,7 +359,7 @@ class WellboreTrajectory(CalculableObject):
             isHorizontal=array(['Vertical', 'Horizontal', 'Horizontal'], dtype='<U10')
         )
 
-                # with only surface x and y provided
+        # with only surface x and y provided
         >>> well_dict = {
         ...    "wellId": "well_A",
         ...    "md": [5600.55, 5800.0, 5900.0],
@@ -393,8 +398,8 @@ class WellboreTrajectory(CalculableObject):
         if self.deviation_survey_obj.surface_latitude is None and self.deviation_survey_obj.surface_longitude is None:
             self.crs_transform(**kwargs)
 
-        self.minimum_curvature_algorithm() # get minimum curvature points
+        self.minimum_curvature_algorithm()  # get minimum curvature points
 
-        self.calculate_lat_lon_from_deviation_points() # get lat lon points
+        self.calculate_lat_lon_from_deviation_points()  # get lat lon points
 
-        self.calculate_horizontal() # calc horizontal
+        self.calculate_horizontal()  # calc horizontal
