@@ -27,7 +27,7 @@ class TestSurfaceLatLongVSXY(unittest.TestCase):
         # must import crs transform string
         well_obj.crs_transform(crs_in='epsg:32638')
         well_obj.calculate_survey_points()
-        json_ds = well_obj.deserialize()
+        json_ds = well_obj.serialize()
 
         json_ds_obj = json.loads(json_ds)
         # convert to df and keep only the lat and long points
@@ -41,8 +41,8 @@ class TestSurfaceLatLongVSXY(unittest.TestCase):
         # calculate survey points
         well_obj.calculate_survey_points()
 
-        # deserialize data object
-        json_ds = well_obj.deserialize()
+        # serialize data object
+        json_ds = well_obj.serialize()
 
         # load and convert to df
         json_ds_obj = json.loads(json_ds)
