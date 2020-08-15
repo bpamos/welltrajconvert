@@ -41,20 +41,50 @@ class WellboreTrajectory(CalculableObject):
 
     def minimum_curvature_algorithm(self):
         """
-        Calculate values along the wellbore using only provided md, inc, and azim
-        calculate TVD, n_s_deviation, e_w_deviation, and dls
+        Calculate TVD, n_s_deviation, e_w_deviation, and dls values along the wellbore
+        using md, inc, and azim
 
         :parameter:
+        -------
         None
 
         :return:
-        tvd_cum:            (np.array)
-        dls:                (np.array)
-        e_w_deviation:      (np.array)
-        n_s_deviation:      (np.array)
-        """
-        # Following are the calculations for Minimum Curvature Method
+        -------
+        calculated np.array values
+        tvd: np.array
+        dls: np.array
+        e_w_deviation: np.array
+        n_s_deviation: np.array
 
+        :examples:
+        -------
+        >>> well_dict = {
+        ...    "wellId": "well_A",
+        ...    "md": [5600.55, 5800.0, 5900.0],
+        ...    "inc": [85.03, 89.91, 90.97],
+        ...    "azim": [27.59, 26.69, 26.72],
+        ...    "surface_latitude": 29.90829444,
+        ...    "surface_longitude": 47.68852083
+        ... }
+        >>> dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
+        >>> dev_obj.minimum_curvature_algorithm() # calc min curve algo
+        >>> dev_obj.deviation_survey_obj # view data obj
+        DeviationSurvey(
+            wellId='well_A',
+            md=array([5600.55, 5800.  , 5900.  ]),
+            inc=array([85.03, 89.91, 90.97]),
+            azim=array([27.59, 26.69, 26.72]),
+            surface_latitude=29.90829444,
+            surface_longitude=47.68852083,
+            tvd=array([0., 8.80141137, 8.03341735]),
+            n_s_deviation=array([0., 177.2584235 , 266.58772113]),
+            e_w_deviation=array([0., 90.86066456, 135.79840877]),
+            dls=array([0., 2.44319979, 1.05999298]),
+            surface_x=None, surface_y=None, x_points=None, y_points=None,
+            zone_number=None, zone_letter=None, latitude_points=None, longitude_points=None, isHorizontal=None
+        )
+        """
+        # get md, inc, and azim arrays
         md = self.deviation_survey_obj.md
         inc = self.deviation_survey_obj.inc
         azim = self.deviation_survey_obj.azim
@@ -120,23 +150,92 @@ class WellboreTrajectory(CalculableObject):
         for the ns and ew deviations
 
         :parameter:
-        e_w_deviation:          (np.array)
-        n_s_deviation:          (np.array)
+        -------
+        e_w_deviation: np.array
+        n_s_deviation: np.array
 
         required survey data:
-        self.surface_latitude:  (float)
-        self.surface_longitude: (float)
+        self.surface_latitude: float
+        self.surface_longitude: float
 
         :return:
+        -------
         Calculated attributes for lat lon points
-        longitude_points:       (np.array)
-        latitude_points:        (np.array)
-        zone_number:            (str)
-        zone_letter:            (str)
-        x_points:               (np.array)
-        y_points:               (np.array)
-        surface_x:              (np.array)
-        surface_y:              (np.array)
+        longitude_points: np.array
+        latitude_points: np.array
+        zone_number: str
+        zone_letter: str
+        x_points: np.array
+        y_points: np.array
+        surface_x: np.array
+        surface_y: np.array
+
+        :examples:
+        -------
+        # well dict with surface latitude and longitude
+        >>> well_dict = {
+        ...    "wellId": "well_A",
+        ...    "md": [5600.55, 5800.0, 5900.0],
+        ...    "inc": [85.03, 89.91, 90.97],
+        ...    "azim": [27.59, 26.69, 26.72],
+        ...    "surface_latitude": 29.90829444,
+        ...    "surface_longitude": 47.68852083
+        ... }
+        >>> dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
+        >>> dev_obj.minimum_curvature_algorithm() # requires min curve
+        >>> dev_obj.calculate_lat_lon_from_deviation_points() # calc lat lon dev points
+        >>> dev_obj.deviation_survey_obj # view data obj
+        DeviationSurvey(
+            wellId='well_A',
+            md=array([5600.55, 5800.  , 5900.  ]),
+            inc=array([85.03, 89.91, 90.97]),
+            azim=array([27.59, 26.69, 26.72]),
+            surface_latitude=29.90829444,
+            surface_longitude=47.68852083,
+            tvd=array([0., 8.80141137, 8.03341735]),
+            n_s_deviation=array([0., 177.2584235 , 266.58772113]),
+            e_w_deviation=array([0., 90.86066456, 135.79840877]),
+            dls=array([0., 2.44319979, 1.05999298]),
+            surface_x=759587.9344401711, surface_y=3311661.864849136,
+            x_points=array([759587.93444017, 759615.62877073, 759629.32579517]),
+            y_points=array([3311661.86484914, 3311715.89321662, 3311743.12078654]),
+            zone_number=38, zone_letter='R',
+            latitude_points=array([29.90829435, 29.90877556, 29.90901812]),
+            longitude_points=array([47.68852365, 47.68882331, 47.68897163]),
+            isHorizontal=None
+        )
+
+        # with only surface x and y provided
+        >>> well_dict = {
+        ...    "wellId": "well_A",
+        ...    "md": [5600.55, 5800.0, 5900.0],
+        ...    "inc": [85.03, 89.91, 90.97],
+        ...    "azim": [27.59, 26.69, 26.72],
+        ...    "surface_x": 759587.9344401711,
+        ...    "surface_y": 3311661.864849136
+        ... }
+        >>> dev_obj.crs_transform(crs_in='epsg:32638') # requires `crs_transform`
+        >>> dev_obj.minimum_curvature_algorithm() # requires min curve
+        >>> dev_obj.calculate_lat_lon_from_deviation_points() # calc lat lon dev points
+        >>> dev_obj.deviation_survey_obj # view data obj
+        DeviationSurvey(
+            wellId='well_A',
+            md=array([5600.55, 5800.  , 5900.  ]),
+            inc=array([85.03, 89.91, 90.97]),
+            azim=array([27.59, 26.69, 26.72]),
+            surface_latitude=29.90829443997491, surface_longitude=47.68852083021084,
+            tvd=array([0., 8.80141137, 8.03341735]),
+            n_s_deviation=array([0., 177.2584235 , 266.58772113]),
+            e_w_deviation=array([0., 90.86066456, 135.79840877]),
+            dls=array([0., 2.44319979, 1.05999298]),
+            surface_x=759587.9344606012, surface_y=3311661.864846832,
+            x_points=array([759587.9344606 , 759615.62879116, 759629.3258156 ]),
+            y_points=array([3311661.86484683, 3311715.89321431, 3311743.12078423]),
+            zone_number=38, zone_letter='R',
+            latitude_points=array([29.90829435, 29.90877556, 29.90901812]),
+            longitude_points=array([47.68852365, 47.68882331, 47.68897163]),
+            isHorizontal=None
+        )
         """
         surface_latitude = self.deviation_survey_obj.surface_latitude
         surface_longitude = self.deviation_survey_obj.surface_longitude
@@ -162,7 +261,7 @@ class WellboreTrajectory(CalculableObject):
         self.deviation_survey_obj.surface_x = surface_x
         self.deviation_survey_obj.surface_y = surface_y
 
-    #TODO: get the angle value to work in **kwargs
+    # TODO: get the angle value to work in **kwargs
     def calculate_horizontal(self, horizontal_angle: Optional[float] = 88.0):
         """
         calculate if the inclination of the wellbore is in its horizontal section
