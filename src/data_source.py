@@ -35,7 +35,7 @@ class DataSource:
         :Return:
         data object
         """
-        # deserialize
+        # serialize
         json_obj = json.loads(json_obj)
         res = cls(data=json_obj)
         return res
@@ -44,7 +44,7 @@ class DataSource:
     @classmethod
     def from_dictionary(cls, dict_obj):
         """
-        Deserialize dict object to string
+        serialize dict object to string
 
         :Parameters:
         dict object
@@ -52,8 +52,8 @@ class DataSource:
         :Return:
         str used in `from_json`
         """
-        # deserialize
-        json_string = json.dumps(dict_obj)
+
+        json_string = json.dumps(dict_obj)  # serialize
         return cls.from_json(json_string)
 
     @classmethod
