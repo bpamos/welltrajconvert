@@ -1,7 +1,10 @@
 from src.utils import *
 
 
-class DataSource():
+class DataSource:
+    """
+    Accept different data types and transforms them into the wellbore trajectory data format.
+    """
 
     def __init__(self, data=None):
         """
