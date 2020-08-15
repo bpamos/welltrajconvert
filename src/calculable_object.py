@@ -1,5 +1,5 @@
 from src.deviation_survey import *
-#from src.utils import *
+
 
 class CalculableObject(DataObject):
 
@@ -11,195 +11,114 @@ class CalculableObject(DataObject):
         directional_survey_points (Dataclass Object) DataObject object
         """
 
-        self.deviation_survey_obj = DeviationSurvey(**deviation_survey_obj)
-
-    def deserialize(self):
-        super().deserialize()
+        self.deviation_survey_obj = deviation_survey_obj
 
     def validate(self):
         super().validate()
 
+    def deserialize(self):
+        super().deserialize()
+
+    @classmethod
+    def from_json(cls, path: PathOrStr):
+        """
+        Pass in a json path, either a string or a Path lib path and convert to a WellboreTrajectory data obj
+
+        :param:
+        -------
+         path: PathOrStr
+
+        :return:
+        -------
+        deviation_survey_obj: Obj
+
+        :examples:
+        -------
+        # accepts path or string
+        >>> json_path = path/'data/example.json' # path object
+        # alternative:
+        >>> json_path = 'C:/Users/data/example.json' # str
+        >>> dev_obj = WellboreTrajectory.from_json(json_path) # read in json path and create data obj
+        >>> dev_obj.data # view raw json
+        {'wellId': 'well_A','md': [5600.55, 5800.0, 5900.0],'inc': [85.03, 89.91, 90.97],
+         'azim': [27.59, 26.69, 26.72],'surface_latitude': 29.90829444,'surface_longitude': 47.68852083}
+        >>> dev_obj.deviation_survey_obj # view data obj results
+        DeviationSurvey(
+            wellId='well_A', md=array([5600.55,5800., 5900.]), inc=array([85.03, 89.91, 90.97]),
+            azim=array([27.59, 26.69, 26.72]), surface_latitude=29.90829444, surface_longitude=47.68852083,
+            tvd=None, n_s_deviation=None, e_w_deviation=None, dls=None, surface_x=None, surface_y=None,
+            x_points=None, y_points=None, zone_number=None, zone_letter=None, latitude_points=None,
+            longitude_points=None, isHorizontal=None
+        )
+        """
+
+        with open(path) as json_file:
+            json_data = json.load(json_file)
+        json_file.close()
+
+        res = cls(data=json_data)  # converts json data
+        return res
+
     def serialize(self):
-        super().serialize()
-
-    #@classmethod
-    def crs_transform(self, crs_in: str):
-        crs_out = "EPSG:4326"
-
-        x = self.deviation_survey_obj.surface_x
-        y = self.deviation_survey_obj.surface_y
-        self.deviation_survey_obj.surface_latitude, self.deviation_survey_obj.surface_longitude = \
-            crs_transformer(crs_out=crs_out, crs_in=crs_in, x=x, y=y)
-
-    def minimum_curvature_algo(self):
         """
-        Calculate values along the wellbore using only provided md, inc, and azim
-        calculate TVD, n_s_deviation, e_w_deviation, and dls
+        Convert survey object to serialized json
 
         :parameter:
+        -------
         None
 
         :return:
-        tvd_cum:            (np.array)
-        dls:                (np.array)
-        e_w_deviation:      (np.array)
-        n_s_deviation:      (np.array)
+        -------
+        json: str
+
+        :examples:
+        -------
+        >>> well_dict = {
+        ...    "wellId": "well_A",
+        ...    "md": [5600.55, 5800.0, 5900.0],
+        ...    "inc": [85.03, 89.91, 90.97],
+        ...    "azim": [27.59, 26.69, 26.72],
+        ...    "surface_latitude": 29.90829444,
+        ...    "surface_longitude": 47.68852083
+        ... }
+        >>> dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
+        >>> dev_obj.calculate_survey_points() # runs through min curve algo, calc lat lon points, and calc horizontal
+        >>> dev_obj.serialize() # convert data object to a serialized json string
+        '{"wellId": "well_A", "md": [5600.55, 5800.0, 5900.0], "inc": [85.03, 89.91, 90.97],
+        "azim": [27.59, 26.69, 26.72], "tvd": [0.0, 8.801411366548953, 8.033417349071017],
+        "e_w_deviation": [0.0, 90.86066455861472, 135.79840877475],
+        "n_s_deviation": [0.0, 177.2584234997277, 266.5877211334688],
+        "dls": [0.0, 2.4431997863679826, 1.0599929804526975],
+        "surface_latitude": 29.90829444, "surface_longitude": 47.68852083,
+        "longitude_points": [47.6885236512062, 47.68882330644181, 47.688971633323014],
+        "latitude_points": [29.90829435014479, 29.908775557209452, 29.90901811572951],
+        "zone_number": 38, "zone_letter": "R",
+        "x_points": [759587.9344401711, 759615.6287707286, 759629.3257951656],
+        "y_points": [3311661.864849136, 3311715.893216619, 3311743.120786538],
+        "surface_x": 759587.9344401711, "surface_y": 3311661.864849136,
+        "isHorizontal": ["Vertical", "Horizontal", "Horizontal"]}'
         """
-        # Following are the calculations for Minimum Curvature Method
 
-        md = self.deviation_survey_obj.md
-        inc = self.deviation_survey_obj.inc
-        azim = self.deviation_survey_obj.azim
+        json_obj = dict(wellId=str(self.deviation_survey_obj.wellId),
+                        md=list(self.deviation_survey_obj.md),
+                        inc=list(self.deviation_survey_obj.inc),
+                        azim=list(self.deviation_survey_obj.azim),
+                        tvd=list(self.deviation_survey_obj.tvd),
+                        e_w_deviation=list(self.deviation_survey_obj.e_w_deviation),
+                        n_s_deviation=list(self.deviation_survey_obj.n_s_deviation),
+                        dls=list(self.deviation_survey_obj.dls),
+                        surface_latitude=float(self.deviation_survey_obj.surface_latitude),
+                        surface_longitude=float(self.deviation_survey_obj.surface_longitude),
+                        longitude_points=list(self.deviation_survey_obj.longitude_points),
+                        latitude_points=list(self.deviation_survey_obj.latitude_points),
+                        zone_number=int(self.deviation_survey_obj.zone_number),
+                        zone_letter=str(self.deviation_survey_obj.zone_letter),
+                        x_points=list(self.deviation_survey_obj.x_points),
+                        y_points=list(self.deviation_survey_obj.y_points),
+                        surface_x=float(self.deviation_survey_obj.surface_x),
+                        surface_y=float(self.deviation_survey_obj.surface_y),
+                        isHorizontal=list(self.deviation_survey_obj.isHorizontal))
 
-        # Convert to Radians
-        inc_rad = np.multiply(inc, 0.0174533)
-        azim_rad = np.multiply(azim, 0.0174533)
+        json_string = json.dumps(json_obj)  # converts a data object into a json string.
 
-        # Shift all array values +1
-        md_shift = shift(md, 1, cval=np.NaN)
-        inc_rad_shift = shift(inc_rad, 1, cval=np.NaN)
-        azim_rad_shift = shift(azim_rad, 1, cval=np.NaN)
-
-        # calculate beta (dog leg angle)
-        beta = np.arccos(
-            np.cos(inc_rad - inc_rad_shift - (np.sin(inc_rad_shift) *
-                                              np.sin(inc_rad) *
-                                              (1 - np.cos(azim_rad - azim_rad_shift))
-                                              )))
-
-        # convert first nan value to 0
-        beta[np.isnan(beta)] = 0
-
-        # dog leg severity per 100 ft
-        dls = (beta * 57.2958 * 100) / (md - md_shift)
-        dls[np.isnan(dls)] = 0
-
-        # calculate ratio factor (radians)
-        # replace 0 for rf calc
-        beta_no_zero = np.where(beta == 0, 1, beta)
-        rf = np.where(beta == 0, 1, 2 / beta_no_zero * np.tan(beta_no_zero / 2))
-
-        # calculate total vertical depth
-        tvd = ((md - md_shift) / 2) * (np.cos(inc_rad_shift) + np.cos(inc_rad)) * rf
-        tvd[np.isnan(tvd)] = 0
-
-        tvd = np.cumsum(tvd, dtype=float)
-
-        # calculating NS
-        ns = ((md - md_shift) / 2) * (
-                np.sin(inc_rad_shift) * np.cos(azim_rad_shift) +
-                np.sin(inc_rad) * np.cos(azim_rad)) * rf
-        ns[np.isnan(ns)] = 0
-
-        n_s_deviation = np.cumsum(ns, dtype=float)
-
-        # calculating EW
-        ew = ((md - md_shift) / 2) * (
-                np.sin(inc_rad_shift) * np.sin(azim_rad_shift) +
-                np.sin(inc_rad) * np.sin(azim_rad)) * rf
-        ew[np.isnan(ew)] = 0
-
-        e_w_deviation = np.cumsum(ew, dtype=float)
-
-        self.deviation_survey_obj.tvd = tvd
-        self.deviation_survey_obj.dls = dls
-        self.deviation_survey_obj.e_w_deviation = e_w_deviation
-        self.deviation_survey_obj.n_s_deviation = n_s_deviation
-
-    def calculate_lat_lon_from_deviation_points(self):
-        """
-        get lat lon points from survey using minimum curvature algorithm generated values
-        for the ns and ew deviations
-
-        :parameter:
-        e_w_deviation:          (np.array)
-        n_s_deviation:          (np.array)
-
-        required survey data:
-        self.surface_latitude:  (float)
-        self.surface_longitude: (float)
-
-        :return:
-        Calculated attributes for lat lon points
-        longitude_points:       (np.array)
-        latitude_points:        (np.array)
-        zone_number:            (str)
-        zone_letter:            (str)
-        x_points:               (np.array)
-        y_points:               (np.array)
-        surface_x:              (np.array)
-        surface_y:              (np.array)
-        """
-        surface_latitude = self.deviation_survey_obj.surface_latitude
-        surface_longitude = self.deviation_survey_obj.surface_longitude
-        e_w_deviation = self.deviation_survey_obj.e_w_deviation
-        n_s_deviation = self.deviation_survey_obj.n_s_deviation
-
-        # create X and Y deviation points and zone number and letter
-        surface_x, surface_y, zone_number, zone_letter = utm.from_latlon(surface_latitude, surface_longitude)
-
-        # add the x and y offset from the surface x and y for each point * meters conversion
-        x_points = np.multiply(e_w_deviation, 0.3048) + surface_x
-        y_points = np.multiply(n_s_deviation, 0.3048) + surface_y
-
-        # create lat lon points along the wellbore from the x,y,zone number and leter
-        latitude_points, longitude_points = utm.to_latlon(x_points, y_points, zone_number, zone_letter)
-
-        self.deviation_survey_obj.longitude_points = longitude_points
-        self.deviation_survey_obj.latitude_points = latitude_points
-        self.deviation_survey_obj.zone_number = zone_number
-        self.deviation_survey_obj.zone_letter = zone_letter
-        self.deviation_survey_obj.x_points = x_points
-        self.deviation_survey_obj.y_points = y_points
-        self.deviation_survey_obj.surface_x = surface_x
-        self.deviation_survey_obj.surface_y = surface_y
-
-    def calculate_horizontal(self,  horizontal_angle: Optional[float] = 88.0):
-        """
-        calculate if the inclination of the wellbore is in its horizontal section
-        If the wellbore inclination is greater than 88 degrees the wellbore is horizontal
-        else the well is vertical
-
-        :parameter:
-        None
-
-        :return:
-        inc_hz:     (np.array)
-        """
-        # get inc points
-        inc = self.deviation_survey_obj.inc
-
-        # inc greater than 88 deg is horizontal, else vertical
-        inc_hz = np.greater(inc, horizontal_angle)
-        inc_hz = np.where((inc_hz == True), 'Horizontal', 'Vertical')
-
-        self.deviation_survey_obj.isHorizontal = inc_hz
-
-    @abstractmethod
-    def calculate_survey_points(self, **kwargs):
-        """
-        Run the minimum_curvature_algo, calculate_lat_lon_from_deviation_points, and calculate_horizontal
-        functions to calculate the wells lat lon points and other attributes from provided md, inc, azim
-        and surface lat lon
-
-        :parameter:
-        None
-
-        :return:
-        survey_points_obj:       (DirectionalSurvey obj)
-
-        """
-        for k,v in kwargs.items():
-            print(k,v)
-
-        if self.deviation_survey_obj.surface_latitude is None and self.deviation_survey_obj.surface_longitude is None:
-            self.crs_transform(**kwargs)
-
-        # get minimum curvature points
-        self.minimum_curvature_algo()
-
-        # get lat lon points
-        self.calculate_lat_lon_from_deviation_points()
-
-        # calc horizontal
-        self.calculate_horizontal()
+        return json_string

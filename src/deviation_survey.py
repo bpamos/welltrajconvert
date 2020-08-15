@@ -35,6 +35,7 @@ class DeviationSurvey(DataObject):
                         A positive value denotes east.
                         Angle measured about the spheroid axis from
                         a local prime meridian to the meridian through the point.
+    IsHorizontal:       Array of strings, Vertical Or Horizontal depending on Inclination angle point
 
     :returns:
     dataclass obj:      Dataclass DirectionalSurvey object
@@ -61,8 +62,11 @@ class DeviationSurvey(DataObject):
     longitude_points: np.ndarray = field(default=None, metadata={'unit': 'float'})
     isHorizontal: np.ndarray = field(default=None, metadata={'unit': 'str'})
 
-    def deserialize(self):
-        super().deserialize()
+    def from_json(self):
+        super().from_json()
+
+    def serialize(self):
+        super().serialize()
 
     def validate(self):
         """
@@ -147,7 +151,6 @@ class DeviationSurvey(DataObject):
             # get the diff between each element
             dx = np.diff(self.md)
             # if they are greater than zero, then the array is always increasing in the positive direction
-            #if np.all(dx <= 0) or np.all(dx >= 0) == True:
             if np.all(dx >= 0) == True:
                 pass
             else:
@@ -164,9 +167,9 @@ class DeviationSurvey(DataObject):
         validate_lat_long_range(self)
         validate_array_monotonic(self)
 
-    def serialize(self):
+    def deserialize(self):
         """
-        convert dict values to their proper serialized dict values
+        convert dict values to their proper deserialized dict values
         converts lists to np.arrays if not None
         converts value to float if not None
         converts value to int if not None
@@ -176,7 +179,7 @@ class DeviationSurvey(DataObject):
         DataObject params
 
         :return:
-        DataObject params serialized as floats, str, int, or np.arrays
+        DataObject params deserialized as floats, str, int, or np.arrays
         """
 
         self.wellId = to_type(self.wellId, str)
@@ -208,7 +211,7 @@ class DeviationSurvey(DataObject):
         else if type given doesnt match dataclass type raise error
         """
         self.validate()
-        self.serialize()
+        self.deserialize()
         for (name, field_type) in self.__annotations__.items():
             if not isinstance(self.__dict__[name], field_type):
                 current_type = type(self.__dict__[name])

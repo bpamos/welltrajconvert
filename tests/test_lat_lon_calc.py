@@ -1,9 +1,6 @@
 import unittest
-from src.transforms import *
 from src.wellbore_trajectory import *
 
-# Unit tests
-# TODO find out how to move this to the tests folder, having trouble with paths
 
 class TestLatLonCalc(unittest.TestCase):
 
@@ -16,25 +13,20 @@ class TestLatLonCalc(unittest.TestCase):
         df = pd.read_csv(file, sep=',')
         df_lat_lon_orig = df[['latitude_decimal_deg', 'longitude_decimal_deg']]
 
-        #get wellbore json
-
-        file_path = get_files(path, folders='data', extensions='.json')
-        file_path = file_path.items[0]
-
-        # with open(json_path[0]) as json_file:
-        #     data = json.load(json_file)
-        # json_file.close()
-        #print(file_path)
+        # get survey obj
+        file_path = path/'data/wellbore_survey.json'
 
         # get survey obj
         well_obj = WellboreTrajectory.from_json(file_path)
-        #well_obj = WellboreTrajectory(data)
 
         # calculate survey points
         well_obj.calculate_survey_points()
 
-        # convert to df
-        df_min_curve = well_obj.get_survey_df()
+        # serialize
+        json_ds = well_obj.serialize()
+        # load and convert to df
+        json_ds_obj = json.loads(json_ds)
+        df_min_curve = pd.DataFrame(json_ds_obj)
 
         # merge original df (with official lat lon points) and calculated lat lon points
         df_test = pd.merge(df_min_curve, df_lat_lon_orig, left_index=True, right_index=True)
