@@ -21,8 +21,8 @@ class TestLatLonJsonVSBenchmark(unittest.TestCase):
         # calculate survey points
         well_obj.calculate_survey_points()
 
-        # deserialize data object
-        json_ds = well_obj.deserialize()
+        # serialize data object
+        json_ds = well_obj.serialize()
 
         #load json string
         json_ds = json.loads(json_ds)
