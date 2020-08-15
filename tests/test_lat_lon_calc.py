@@ -13,9 +13,8 @@ class TestLatLonCalc(unittest.TestCase):
         df = pd.read_csv(file, sep=',')
         df_lat_lon_orig = df[['latitude_decimal_deg', 'longitude_decimal_deg']]
 
-        #get wellbore json
-        file_path = get_files(path, folders='data', extensions='.json')
-        file_path = file_path.items[0]
+        # get survey obj
+        file_path = path/'data/wellbore_survey.json'
 
         # get survey obj
         well_obj = WellboreTrajectory.from_json(file_path)
@@ -23,8 +22,8 @@ class TestLatLonCalc(unittest.TestCase):
         # calculate survey points
         well_obj.calculate_survey_points()
 
-        # deserialize
-        json_ds = well_obj.deserialize()
+        # serialize
+        json_ds = well_obj.serialize()
         # load and convert to df
         json_ds_obj = json.loads(json_ds)
         df_min_curve = pd.DataFrame(json_ds_obj)
