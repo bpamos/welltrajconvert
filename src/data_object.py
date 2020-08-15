@@ -15,9 +15,9 @@ class DataObject(metaclass=abc.ABCMeta):
         pass
 
     @abstractmethod
-    def serialize(self):
+    def deserialize(self):
         pass
 
     @abstractmethod
-    def deserialize(self):
+    def serialize(self):
         pass
