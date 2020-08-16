@@ -35,7 +35,7 @@ class DeviationSurvey(DataObject):
                         A positive value denotes east.
                         Angle measured about the spheroid axis from
                         a local prime meridian to the meridian through the point.
-    IsHorizontal:       Array of strings, Vertical Or Horizontal depending on Inclination angle point
+    isHorizontal:       Array of strings, Vertical Or Horizontal depending on Inclination angle point
 
     :returns:
     dataclass obj:      Dataclass DirectionalSurvey object
