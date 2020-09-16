@@ -1,0 +1,4 @@
+sphinx>=2.4,<3
+sphinx_rtd_theme<0.5
+nbsphinx>=0.4
+jupyter>=1

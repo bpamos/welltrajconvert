@@ -12,6 +12,9 @@
 #
 import os
 import sys
+
+#import sphinx_rtd_theme
+
 sys.path.insert(0, os.path.abspath('..'))
 
 
@@ -34,7 +37,11 @@ master_doc = 'index'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.autodoc.typehints"
 ]
 
 # Add any paths that contain templates here, relative to this directory.
