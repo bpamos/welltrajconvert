@@ -61,7 +61,7 @@ Contents
 
     install
     tutorial
-    utils
+    api
 
 
 Indices and tables
