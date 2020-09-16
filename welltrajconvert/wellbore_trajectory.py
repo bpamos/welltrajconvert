@@ -1,5 +1,5 @@
-from src.calculable_object import *
-from src.base import *
+from welltrajconvert.calculable_object import *
+from welltrajconvert.base import *
 
 
 class WellboreTrajectory(CalculableObject):

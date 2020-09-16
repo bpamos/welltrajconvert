@@ -1,4 +1,4 @@
-from src.data_object import *
+from welltrajconvert.data_object import *
 
 
 @dataclass

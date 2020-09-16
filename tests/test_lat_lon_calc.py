@@ -1,5 +1,5 @@
 import unittest
-from src.wellbore_trajectory import *
+from welltrajconvert.wellbore_trajectory import *
 
 
 class TestLatLonCalc(unittest.TestCase):

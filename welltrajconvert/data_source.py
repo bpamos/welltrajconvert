@@ -1,4 +1,4 @@
-from src.utils import *
+from welltrajconvert.utils import *
 
 
 class DataSource:
