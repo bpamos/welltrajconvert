@@ -33,6 +33,8 @@ master_doc = 'index'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -55,3 +57,8 @@ html_theme = 'nature'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+intersphinx_mapping = {
+        'http://docs.python.org/dev': None,
+        'http://docs.scipy.org/doc/numpy/': None
+        }
