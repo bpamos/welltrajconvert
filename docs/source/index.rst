@@ -1,7 +1,7 @@
-Welcome to directional-survey-converter's documentation!
+Welcome to welltrajconvert's documentation!
 ========================================================
 
-Directional-survey-converter gives you and easy way to convert the numerous different styles of wellbore directional surveys often delivered by service companies into a standard format with all the metadata a user is typically interested in. Using the bare minimum information given the directional-survey-converter uses a minimum curvature algorithm to calculate survey points along the wellbore so the user can have all the data they need to perform their analysis. Why should you use the directional-survey-converter?
+`welltrajconvert` gives you and easy way to convert the numerous different styles of wellbore directional surveys often delivered by service companies into a standard format with all the metadata a user is typically interested in. Using the bare minimum information given the welltrajconvert uses a minimum curvature algorithm to calculate survey points along the wellbore so the user can have all the data they need to perform their analysis. Why should you use the welltrajconvert?
 
 * You have a single survey with only the MD, INC, AZIM, and surface latitude and longitude and need additional metadata.
 
@@ -29,7 +29,7 @@ Here's an example, to give you an impression::
    df = pd.DataFrame(json_ds_obj) # convert dict to dataframe
    df.head() # display dataframe
 
-(This example is :file:`examples/MAKE_EXAMPLE_FILE.py` in the directional-survey-converter
+(This example is :file:`examples/MAKE_EXAMPLE_FILE.py` in the welltrajconvert
 source distribution.)
 
 On the surface it looks quite simple. Behind the scenes there is a lot more interesting stuff going on:

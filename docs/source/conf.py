@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'directional-survey-converter'
+project = 'welltrajconvert'
 copyright = '2020, Brandon Amos'
 author = 'Brandon Amos'
 

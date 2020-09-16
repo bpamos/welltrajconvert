@@ -4,7 +4,7 @@ Tutorial
 Getting started
 ---------------
 
-Before you can use :mod:`directional-survey-converter`, you have to import and initialize it::
+Before you can use :mod:`welltrajconvert`, you have to import and initialize it::
 
     from src.wellbore_trajectory import *
 
@@ -12,11 +12,11 @@ Before you can use :mod:`directional-survey-converter`, you have to import and i
 Transferring Data
 -----------------
 
-The next step is to transfer data into the directional-survey-converter.
+The next step is to transfer data into the welltrajconvert.
 Data formats vary from survey to survey depending on where it is coming from or what vendor is supplying it.
 The data could come from a single csv, a csv with multiple wells, from a database via a SQL query, a txt file, ect.
 
-Due to this, the directional-survey-converter ensures consistency by only accepting a :py:class:`JSON` document
+Due to this, the welltrajconvert ensures consistency by only accepting a :py:class:`JSON` document
 or a :py:class:`dict` in a specific format.
 To get data into this format there are a host of helper functions, see the `DataSource` class.
 
@@ -27,7 +27,7 @@ Let's import a json.::
 
     json_path = path/'data/wellbore_survey.json'
 
-Using the :mod:`directional-survey-converter.WellboreTrajectory` module, use the `from_json` abstract method
+Using the :mod:`welltrajconvert.WellboreTrajectory` module, use the `from_json` abstract method
 to grab the path and convert its contents into a deviation survey object.
 This step will validate if the json contains the correct data for the minimum curvature calculation.::
 
@@ -51,7 +51,7 @@ Let's import the data as a :py:class:`dict`::
         }
 
 Since we already have the dict object we do not need to call, `from_json`.
-Lets just pass the dict directly into :class:`directional-survey-converter.WellboreTrajectory`::
+Lets just pass the dict directly into :class:`welltrajconvert.WellboreTrajectory`::
 
     dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
     # take a look at the data
@@ -65,7 +65,7 @@ Lets calculate the directional survey metadata following the steps from above.
 
 Here, we are only given input data for wellId, md, inc, azim, and surface latitude and longitude.
 The rest of the data is missing and needs to be
-calculated with the :class:`directional-survey-converter.WellboreTrajectory.calculate_survey_points`::
+calculated with the :class:`welltrajconvert.WellboreTrajectory.calculate_survey_points`::
 
     # now you can calculate the survey points using a minimum curvature algorithm
     dev_obj.calculate_survey_points()
@@ -108,7 +108,7 @@ Let's import the data as a :class:`dict` (notice, surface X, Y are provided inst
         }
 
 Since we already have the dict object we do not need to call, `from_json`.
-Lets just pass the dict directly into :class:`directional-survey-converter.WellboreTrajectory`::
+Lets just pass the dict directly into :class:`welltrajconvert.WellboreTrajectory`::
 
     dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
     dev_obj.deviation_survey_obj # take a look at the data
@@ -117,7 +117,7 @@ CRS Transform
 ------------------
 
 Once you have imported your data in as a deviation survey object there is one final step.
-Because you do not have the surface latitude and longitude you must provide a :class:`directional-survey-converter.WellboreTrajectory.crs_transform()`
+Because you do not have the surface latitude and longitude you must provide a :class:`welltrajconvert.WellboreTrajectory.crs_transform()`
 This requires you to enter in the EPSG coordinate system for your data. Find your EPSG coordinate system `here <https://epsg.io/>`_.
 
 This takes in a crs input and transforms the surface x y coordinates to surface lat lon in the WGS84 projection space.::
@@ -146,13 +146,13 @@ Dealing with Different Data Sources
 
 Survey data does not typically come in a dict or json format.
 It commonly comes in a tabular format, either from databases via an SQL query or from individual or combined CSVs.
-We can handle different data sources by using the :class:`directional-survey-converter.DataSource()` class.
+We can handle different data sources by using the :class:`welltrajconvert.DataSource()` class.
 Lets jump in and see how it works.
 
 From CSV
 ------------------
 
-The DataSource module lets you bring in a csv from a csv path or path string using :class:`directional-survey-converter.DataSource.from_csv()`.
+The DataSource module lets you bring in a csv from a csv path or path string using :class:`welltrajconvert.DataSource.from_csv()`.
 The user is required to fill in the column name parameters and the module coverts this into a the required :class:`dict` format.
 Lets bring in an example::
 
@@ -179,7 +179,7 @@ From Pandas DataFrame:
 ------------------------
 
 Following a similar format as above, the user can bring in data from a pandas DataFrame.
-Just use :class:`directional-survey-converter.DataSource.from_df()` and enter in the parameters.::
+Just use :class:`welltrajconvert.DataSource.from_df()` and enter in the parameters.::
 
     my_data = DataSource.from_df(df, wellId_name='wellId',md_name='md',inc_name='inc',azim_name='azim',
              surface_latitude_name='surface_latitude',surface_longitude_name='surface_longitude')
@@ -202,7 +202,7 @@ Serialize the data and view it as a Dataframe::
 From Dictionary:
 ------------------
 
-Of course, the user can bring data in from a dictionary format as well using the :class:`directional-survey-converter.DataSource.from_dictionary()` method.::
+Of course, the user can bring data in from a dictionary format as well using the :class:`welltrajconvert.DataSource.from_dictionary()` method.::
 
     my_data = DataSource.from_dictionary(json_data)
     # calculate the survey points

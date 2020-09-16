@@ -3,9 +3,9 @@
 Installation
 ============
 (WIP)
-The easiest methods for installing directional-survey-converter are:
+The easiest methods for installing welltrajconvert are:
 
 1. Use pip to install::
 
-    pip install directional-survey-converter
+    pip install welltrajconvert
 
