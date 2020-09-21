@@ -29,8 +29,13 @@ Here's an example, to give you an impression::
    df = pd.DataFrame(json_ds_obj) # convert dict to dataframe
    df.head() # display dataframe
 
-.. image:: _static/image/original.PNG
+Output:
 
+.. image:: _static/image/df_example_p1.png
+
+output continued...
+
+.. image:: _static/image/df_example_p2.png
 
 (This example is :file:`examples/MAKE_EXAMPLE_FILE.py` in the welltrajconvert
 source distribution.)
@@ -59,6 +64,7 @@ Contents
 
     install
     tutorial
+    notebook/GettingStarted.ipynb
     api
 
 
