@@ -7,7 +7,7 @@ The `welltrajconvert` python package allows the user to take the bare minimum re
 `welltrajconvert` calculates the following points along the wellbore: latitude_points, longitude_points, x_points, y_points, surface_x, surface_y, dogleg severity, tvd, and a categorical array defining if the well is horizontal or not.
 
 
-The library can take a variety of data inputs ranging from csv, df, and json.
+The package can take a variety of data inputs ranging from csv, df, and json.
 
 
 see https://welltrajconvert.readthedocs.io/en/latest/? for complete documentation.
