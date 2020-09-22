@@ -29,14 +29,6 @@ Here's an example, to give you an impression::
    df = pd.DataFrame(json_ds_obj) # convert dict to dataframe
    df.head() # display dataframe
 
-Output:
-
-.. image:: _static/image/df_example_p1.png
-
-output continued...
-
-.. image:: _static/image/df_example_p2.png
-
 On the surface it looks quite simple. Behind the scenes there is a lot more interesting stuff going on:
 
 * Bring data in and convert it into a dataclass object.
