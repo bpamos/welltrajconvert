@@ -10,6 +10,9 @@ The `welltrajconvert` python package allows the user to take the bare minimum re
 The library can take a variety of data inputs ranging from csv, df, and json.
 
 
+see https://welltrajconvert.readthedocs.io/ for complete documentation.
+
+
 
 # Installation
 
