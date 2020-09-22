@@ -1,4 +1,4 @@
-from src.deviation_survey import *
+from welltrajconvert.deviation_survey import *
 
 
 class CalculableObject(DataObject):

@@ -1,6 +1,6 @@
 import unittest
-from src.utils import *
-from src.wellbore_trajectory import *
+from welltrajconvert.utils import *
+from welltrajconvert.wellbore_trajectory import *
 
 
 class TestSurfaceLatLongVSXY(unittest.TestCase):

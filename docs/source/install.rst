@@ -3,9 +3,20 @@
 Installation
 ============
 (WIP)
-The easiest methods for installing directional-survey-converter are:
+Prerequisites: Python 3.7 or later.
 
-1. Use pip to install::
+It is recommended to install the most recent **stable** release of welltrajconvert from PyPI.
 
-    pip install directional-survey-converter
+.. code-block:: shell
 
+    $ pip install welltrajconvert
+
+
+Alternatively, you could install from source code. This will give you the **latest**, but unstable, version of welltrajconvert.
+
+.. code-block:: shell
+
+    $ git clone https://github.com/bpamos/directional-survey-converter.git
+    $ cd directional-survey-converter/
+    $ git checkout develop
+    $ pip install ./

@@ -14,5 +14,15 @@ sphinx:
   configuration: docs/source/conf.py
 
 # don't use submodules for documentation (readthedocs fails when using submodules)
-submodules:
-  exclude: all
+#submodules:
+#  exclude: all
+
+python:
+    version: 3.7
+    install:
+       - requirements: docs/source/requirements.txt
+       - method: pip
+         path: .
+         extra_requirements:
+             - doc
+    system_packages: true

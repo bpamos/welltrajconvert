@@ -3,9 +3,9 @@
 API
 ==================
 
-This part of the documentation covers all the classes and methods in the directional-survey-converter.
+This part of the documentation covers all the classes and methods in the welltrajconvert.
 
-.. module:: directional-survey-converter
+.. module:: welltrajconvert
 
 Data Object
 --------------------

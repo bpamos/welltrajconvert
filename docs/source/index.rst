@@ -1,7 +1,7 @@
-Welcome to directional-survey-converter's documentation!
+Welcome to welltrajconvert's documentation!
 ========================================================
 
-Directional-survey-converter gives you and easy way to convert the numerous different styles of wellbore directional surveys often delivered by service companies into a standard format with all the metadata a user is typically interested in. Using the bare minimum information given the directional-survey-converter uses a minimum curvature algorithm to calculate survey points along the wellbore so the user can have all the data they need to perform their analysis. Why should you use the directional-survey-converter?
+:mod:`welltrajconvert` is a Python package for wellbore directional survey conversion. It allows the user to take the bare minimum required wellbore directional survey data and uses a minimum curvature algorithm to calculate additional metadata. Why should you use :mod:`welltrajconvert`?
 
 * You have a single survey with only the MD, INC, AZIM, and surface latitude and longitude and need additional metadata.
 
@@ -29,22 +29,27 @@ Here's an example, to give you an impression::
    df = pd.DataFrame(json_ds_obj) # convert dict to dataframe
    df.head() # display dataframe
 
-(This example is :file:`examples/MAKE_EXAMPLE_FILE.py` in the directional-survey-converter
-source distribution.)
+Output:
+
+.. image:: _static/image/df_example_p1.png
+
+output continued...
+
+.. image:: _static/image/df_example_p2.png
 
 On the surface it looks quite simple. Behind the scenes there is a lot more interesting stuff going on:
 
 * Bring data in and convert it into a dataclass object.
 
-* Validate the data conforms to proper directional survey structure for the minimum curvature algorithm
+* Validate the data conforms to proper directional survey structure for the minimum curvature algorithm.
 
 * Check if surface latitude and longitude or surface x and y are provided.
 
 * Calculate horizontal section based on default or user input angle.
 
-* Deserialize data into a format that can be used in a variety of applications.
+* Serialize and deserialize data into a format that can be used in a variety of applications.
 
-* Ability to take in a variety of data sources and formats and compute meta data.
+* Ability to take in a variety of data sources and formats and compute metadata.
 
 Curious? Let’s get started.
 
@@ -56,6 +61,8 @@ Contents
 
     install
     tutorial
+    notebook/Getting Started.ipynb
+    notebook/Getting Started with Data Sources.ipynb
     api
 
 
