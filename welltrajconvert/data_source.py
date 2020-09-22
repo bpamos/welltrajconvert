@@ -23,7 +23,6 @@ class DataSource:
 
         self.data = data
 
-    # TODO: is this needed?
     @classmethod
     def from_json(cls, json_obj):
         """

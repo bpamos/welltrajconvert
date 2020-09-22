@@ -50,7 +50,6 @@ class DeviationSurvey(DataObject):
     tvd: np.ndarray = field(default=None, metadata={'unit': 'float'})
     n_s_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
     e_w_deviation: np.ndarray = field(default=None, metadata={'unit': 'float'})
-    # TODO: dls looks like build rate with no negatives (look into)
     dls: np.ndarray = field(default=None, metadata={'unit': 'float'})
     surface_x: float = field(default=None, metadata={'unit': 'float'})
     surface_y: float = field(default=None, metadata={'unit': 'float'})
@@ -126,7 +125,6 @@ class DeviationSurvey(DataObject):
                     raise ValueError(f"Validation Error: surface_longitude "
                                      f"has values outside acceptable range: {self.surface_longitude}")
 
-        # TODO: is this the correct way to test this.
         def validate_wellId(self):
             """
             validate that wellId is a string, it needs to be a single wellId value
