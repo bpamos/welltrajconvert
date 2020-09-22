@@ -9,11 +9,12 @@ welltrajconvert Overview
 
 * You want to display your wellbore trajectory geospatially using latitude and longitude points along the wellbore.
 
-* Helpful Documentation. You're looking at it. ;)
-
 Here's an example, to give you an impression::
 
+   # import wellbore_trajectory from welltrajconvert
    from welltrajconvert.wellbore_trajectory import *
+
+   # example dict
    well_dict = {
    "wellId": "well_A",
    "md": [5600.55, 5800.0, 5900.0],
@@ -22,12 +23,21 @@ Here's an example, to give you an impression::
    "surface_latitude": 29.90829444,
    "surface_longitude": 47.68852083
    }
+
    dev_obj = WellboreTrajectory(well_dict) # get wellbore trajectory object
    dev_obj.calculate_survey_points() # runs through min curve algo, calc lat lon points, and calc horizontal
    json_ds = dev_obj.serialize() # serialize to json
    json_ds_obj = json.loads(json_ds)
    df = pd.DataFrame(json_ds_obj) # convert dict to dataframe
    df.head() # display dataframe
+
+**Output:**
+
+.. image:: _static/image/df_example_p1.png
+
+**Output Continued:**
+
+.. image:: _static/image/df_example_p2.png
 
 On the surface it looks quite simple. Behind the scenes there is a lot more interesting stuff going on:
 
