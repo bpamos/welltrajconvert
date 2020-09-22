@@ -12,7 +12,7 @@ Before you can use :mod:`welltrajconvert`, you have to import and initialize it:
 Transferring Data
 -----------------
 
-The next step is to transfer data into the welltrajconvert.
+The next step is to transfer data into :mod:`welltrajconvert`.
 Data formats vary from survey to survey depending on where it is coming from or what vendor is supplying it.
 The data could come from a single csv, a csv with multiple wells, from a database via a SQL query, a txt file, ect.
 
