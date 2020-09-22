@@ -4,7 +4,7 @@ The `welltrajconvert` python package allows the user to take the bare minimum re
 
 `welltrajconvert` requires the wellId, measured depth, inclination angle, azimuth degrees, surface_latitude, and surface_longitude points or surface x, y, and crs to calculate various points along the wellbore using a minimum curvature algorithm.
 
-`welltrajconvert` calculates the following points along the wellbore latitude_points, longitude_points, x_points, y_points, surface_x, surface_y, dogleg severity, tvd, and a categorical array defining if the well is horizontal or not.
+`welltrajconvert` calculates the following points along the wellbore: latitude_points, longitude_points, x_points, y_points, surface_x, surface_y, dogleg severity, tvd, and a categorical array defining if the well is horizontal or not.
 
 
 The library can take a variety of data inputs ranging from csv, df, and json.
