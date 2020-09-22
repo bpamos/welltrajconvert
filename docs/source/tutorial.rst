@@ -29,7 +29,10 @@ Let's import a json.::
 
 Using the :mod:`welltrajconvert.WellboreTrajectory` module, use the `from_json` abstract method
 to grab the path and convert its contents into a deviation survey object.
-This step will validate if the json contains the correct data for the minimum curvature calculation.::
+This step will validate if the json contains the correct data for the minimum curvature calculation by using
+the :mod:`welltrajconvert.DeviationSurvey.validate` method.
+This method runs through a series of checks, if the arrays are equal length, if the sign is correct for the data type,
+if the latitude and longitude are between acceptable ranges, and if the MD array is monotonically increasing.::
 
     # create a wellbore deviation object from the json path
     dev_obj = WellboreTrajectory.from_json(json_path)
@@ -39,7 +42,7 @@ If the raw data passes the validation steps it can be viewed here::
     # take a look at the data
     dev_obj.deviation_survey_obj
 
-Let's import the data as a :py:class:`dict`::
+Now that we have seen how to import a json, let's import the data as a :py:class:`dict`::
 
     well_dict = {
         "wellId": "well_A",
@@ -139,7 +142,10 @@ After this, follow the same steps as above to calculate the directional survey p
 Calculate Horizontal
 -------------------------
 
-This is how you calculate the horizontal section. (WIP)
+The :class:`welltrajconvert.WellboreTrajectory.calculate_horizontal()`
+calculates if the inclination of the wellbore is in its horizontal section. If the wellbore inclination is greater
+than 88 degrees then wellbore is horizontal else the well is vertical.
+
 
 Dealing with Different Data Sources
 ------------------------------------------
@@ -179,7 +185,7 @@ From Pandas DataFrame:
 ------------------------
 
 Following a similar format as above, the user can bring in data from a pandas DataFrame.
-Just use :class:`welltrajconvert.DataSource.from_df()` and enter in the parameters.::
+Just use :class:`welltrajconvert.DataSource.from_df()` and enter in the column name parameters.::
 
     my_data = DataSource.from_df(df, wellId_name='wellId',md_name='md',inc_name='inc',azim_name='azim',
              surface_latitude_name='surface_latitude',surface_longitude_name='surface_longitude')

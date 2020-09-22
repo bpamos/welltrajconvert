@@ -3,7 +3,7 @@
 API
 ==================
 
-This part of the documentation covers all the classes and methods in the welltrajconvert.
+This part of the documentation covers all the classes and methods in the `welltrajconvert` package.
 
 .. module:: welltrajconvert
 
