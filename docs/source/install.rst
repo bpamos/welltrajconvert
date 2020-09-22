@@ -17,6 +17,5 @@ Alternatively, you could install from source code. This will give you the **late
 .. code-block:: shell
 
     $ git clone https://github.com/bpamos/welltrajconvert.git
-    $ cd directional-survey-converter/
-    $ git checkout develop
+    $ cd welltrajconvert/
     $ pip install ./
