@@ -23,7 +23,6 @@ class TestWellboreTrajectoryCalcLatLonPoints(unittest.TestCase):
         dev_obj.minimum_curvature_algorithm()
         dev_obj.calculate_lat_lon_from_deviation_points()
 
-        #TODO: could I have just exported as json and compared
         self.assertEqual(dev_obj.deviation_survey_obj.wellId, 'well_A', 'incorrect well name value')
         array_a = dev_obj.deviation_survey_obj.md
         array_b = [5000.0, 5200.0, 5400.0, 5600.55, 5800.0, 5900.0]
