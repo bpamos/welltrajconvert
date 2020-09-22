@@ -16,7 +16,7 @@ Alternatively, you could install from source code. This will give you the **late
 
 .. code-block:: shell
 
-    $ git clone https://github.com/bpamos/directional-survey-converter.git
+    $ git clone https://github.com/bpamos/welltrajconvert.git
     $ cd directional-survey-converter/
     $ git checkout develop
     $ pip install ./
