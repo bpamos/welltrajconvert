@@ -2,7 +2,7 @@
 
 Installation
 ============
-(WIP)
+
 Prerequisites: Python 3.7 or later.
 
 It is recommended to install the most recent **stable** release of welltrajconvert from PyPI.

@@ -6,7 +6,7 @@ Getting started
 
 Before you can use :mod:`welltrajconvert`, you have to import and initialize it::
 
-    from src.wellbore_trajectory import *
+    from welltrajconvert.wellbore_trajectory import *
 
 
 Transferring Data
@@ -18,7 +18,7 @@ The data could come from a single csv, a csv with multiple wells, from a databas
 
 Due to this, the welltrajconvert ensures consistency by only accepting a :py:class:`JSON` document
 or a :py:class:`dict` in a specific format.
-To get data into this format there are a host of helper functions, see the `DataSource` class.
+To get data into this format there are a host of helper functions, see the :mod:`welltrajconvert.DataSource` class.
 
 In this example we will start by importing the data in the required :py:class:`JSON` format,
 and the next example we will create the data from a :py:class:`dict`.

@@ -1,4 +1,4 @@
-Welcome to welltrajconvert's documentation!
+welltrajconvert Overview
 ========================================================
 
 :mod:`welltrajconvert` is a Python package for wellbore directional survey conversion. It allows the user to take the bare minimum required wellbore directional survey data and uses a minimum curvature algorithm to calculate additional metadata. Why should you use :mod:`welltrajconvert`?
@@ -13,7 +13,7 @@ Welcome to welltrajconvert's documentation!
 
 Here's an example, to give you an impression::
 
-   from src.wellbore_trajectory import *
+   from welltrajconvert.wellbore_trajectory import *
    well_dict = {
    "wellId": "well_A",
    "md": [5600.55, 5800.0, 5900.0],
