@@ -1,13 +1,20 @@
 welltrajconvert Overview
 ========================================================
 
-:mod:`welltrajconvert` is a Python package for wellbore directional survey conversion. It allows the user to take the bare minimum required wellbore directional survey data and uses a minimum curvature algorithm to calculate additional metadata. Why should you use :mod:`welltrajconvert`?
+:mod:`welltrajconvert` is a Python package that allows a user to take the bare minimum required
+wellbore survey information and convert it into it's latitude and longitude points, TVD, north/south and east/west deviation,
+and x and y points along the wellbore. The package requires only the wellId, measured depth, inclination angle, azimuth degrees, surface latitude,
+and surface longitude points or surface x, y, and CRS to calculate various points along the wellbore using a minimum curvature algorithm.
+
+Why should you use :mod:`welltrajconvert`?
 
 * You have a single survey with only the MD, INC, AZIM, and surface latitude and longitude and need additional metadata.
 
 * You have a single survey with only the MD, INC, AZIM, and surface x and y coordinates and need additional metadata.
 
 * You want to display your wellbore trajectory geospatially using latitude and longitude points along the wellbore.
+
+* You have multiple surveys and want a standardized output with metadata typically required for additional analytics.
 
 Here's an example, to give you an impression::
 
@@ -31,13 +38,13 @@ Here's an example, to give you an impression::
    df = pd.DataFrame(json_ds_obj) # convert dict to dataframe
    df.head() # display dataframe
 
-**Output:**
+**Output**::
 
-.. image:: _static/image/df_example_p1.png
+       wellId       md    inc   azim       tvd  e_w_deviation  n_s_deviation        dls  surface_latitude  surface_longitude  longitude_points   latitude_points  zone_number zone_letter       x_points      y_points      surface_x     surface_y isHorizontal
+    0  well_A  5600.55  85.03  27.59  0.000000       0.000000       0.000000   0.000000         29.908294          47.688521         47.688521         29.908294           38           R  759587.934440  3.311662e+06   759587.93444  3.311662e+06     Vertical
+    1  well_A  5800.00  89.91  26.69  8.801411      90.860665     177.258423   2.443200         29.908294          47.688521         47.688820         29.908776           38           R  759615.628771  3.311716e+06   759587.93444  3.311662e+06   Horizontal
+    2  well_A  5900.00  90.97  26.72  8.033417     135.798409     266.587721   1.059993         29.908294          47.688521         47.688969         29.909018           38           R  759629.325795  3.311743e+06   759587.93444  3.311662e+06   Horizontal
 
-**Output Continued:**
-
-.. image:: _static/image/df_example_p2.png
 
 On the surface it looks quite simple. Behind the scenes there is a lot more interesting stuff going on:
 
@@ -59,7 +66,7 @@ Contents
 =========
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
     install
     tutorial
