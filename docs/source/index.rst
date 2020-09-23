@@ -2,21 +2,23 @@ welltrajconvert Overview
 ========================================================
 
 :mod:`welltrajconvert` is a Python package that allows a user to take the bare minimum required
-wellbore survey information and convert it into it's latitude and longitude points, TVD, north/south and east/west deviation,
-and x and y points along the wellbore. The package requires only the wellId, measured depth, inclination angle, azimuth degrees, surface latitude,
-and surface longitude points or surface x, y, and CRS to calculate various points along the wellbore using a minimum curvature algorithm.
+wellbore survey information and return it's directional survey points including its latitude, longitude, TVD, XY offset,
+and UTM points. The package requires only the wellId, measured depth, inclination angle, azimuth degrees, surface latitude,
+and surface longitude points or surface UTM XY and associated CRS to calculate its survey points using a minimum curvature algorithm.
 
 Why should you use :mod:`welltrajconvert`?
 
-* You have a single survey with only the MD, INC, AZIM, and surface latitude and longitude and need additional metadata.
-
-* You have a single survey with only the MD, INC, AZIM, and surface x and y coordinates and need additional metadata.
-
 * You want to display your wellbore trajectory geospatially using latitude and longitude points along the wellbore.
 
-* You have multiple surveys and want a standardized output with metadata typically required for additional analytics.
+* You have a single survey with only the MD, INC, AZIM, and surface latitude and longitude and need comprehensive survey points.
 
-Here's an example, to give you an impression::
+* You have a single survey with only the MD, INC, AZIM, and surface X and Y coordinates and need comprehensive survey points.
+
+* You have multiple surveys and want a standardized comprehensive output with data typically required for additional analytics.
+
+Here's an example, to give you an impression:
+
+**Input**::
 
    # import wellbore_trajectory from welltrajconvert
    from welltrajconvert.wellbore_trajectory import *
@@ -48,17 +50,17 @@ Here's an example, to give you an impression::
 
 On the surface it looks quite simple. Behind the scenes there is a lot more interesting stuff going on:
 
-* Bring data in and convert it into a dataclass object.
+* Bringing data in and converting it into a dataclass object.
 
-* Validate the data conforms to proper directional survey structure for the minimum curvature algorithm.
+* Validate that the data conforms to proper directional survey structure for the minimum curvature algorithm.
 
-* Check if surface latitude and longitude or surface x and y are provided.
+* Check if the surface latitude and longitude or surface X and Y are provided.
 
-* Calculate horizontal section based on default or user input angle.
+* Calculate horizontal section when inclination is >= 88 degrees.
 
 * Serialize and deserialize data into a format that can be used in a variety of applications.
 
-* Ability to take in a variety of data sources and formats and compute metadata.
+* Ability to take in a variety of data sources and formats and compute survey data.
 
 Curious? Let’s get started.
 
