@@ -10,7 +10,7 @@ The `welltrajconvert` python package allows the user to take the bare minimum re
 The package can take a variety of data inputs ranging from csv, df, and json.
 
 
-see https://welltrajconvert.readthedocs.io/en/latest/? for complete documentation.
+see https://welltrajconvert.readthedocs.io/en/latest/ for complete documentation.
 
 
 
