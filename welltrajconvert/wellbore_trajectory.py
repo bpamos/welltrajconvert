@@ -128,10 +128,10 @@ class WellboreTrajectory(CalculableObject):
 
         # calculate beta (dog leg angle)
         beta = np.arccos(
-            np.cos(inc_rad - inc_rad_shift - (np.sin(inc_rad_shift) *
-                                              np.sin(inc_rad) *
-                                              (1 - np.cos(azim_rad - azim_rad_shift))
-                                              )))
+                     np.cos((inc_rad) - (inc_rad_shift)) -
+                     (np.sin(inc_rad_shift) * np.sin(inc_rad) *
+                     (1-np.cos(azim_rad - azim_rad_shift))))
+
 
         # convert first nan value to 0
         beta[np.isnan(beta)] = 0

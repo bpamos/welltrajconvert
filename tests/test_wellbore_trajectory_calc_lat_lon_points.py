@@ -36,22 +36,22 @@ class TestWellboreTrajectoryCalcLatLonPoints(unittest.TestCase):
         self.assertEqual(dev_obj.deviation_survey_obj.surface_latitude, 29.90829444, 'incorrect surface lat value')
         self.assertEqual(dev_obj.deviation_survey_obj.surface_longitude, 47.68852083, 'incorrect surface lon value')
         array_a = dev_obj.deviation_survey_obj.tvd.round(3)
-        array_b = [0.,  57.036,  98.558, 124.414, 133.216, 132.448]
+        array_b = [0.,  57.037,  98.559, 124.417, 133.219, 132.451]
         self.assertEqual(compare_arrays(array_a, array_b), True, 'tvd arrays are not equal')
         array_a = dev_obj.deviation_survey_obj.n_s_deviation.round(3)
-        array_b = [0., 168.163, 339.382, 514.199, 691.458, 780.787]
+        array_b = [0., 168.163, 339.385, 514.216, 691.478, 780.807]
         self.assertEqual(compare_arrays(array_a, array_b), True, 'n_s_deviation arrays are not equal')
         array_a = dev_obj.deviation_survey_obj.e_w_deviation.round(3)
-        array_b = [0.,  91.889, 186.438, 281.081, 371.942, 416.879]
+        array_b = [0.,  91.889, 186.44, 281.09, 371.953, 416.89]
         self.assertEqual(compare_arrays(array_a, array_b), True, 'dls arrays are not equal')
         array_a = dev_obj.deviation_survey_obj.dls.round(3)
-        array_b = [0., 2.455, 2.133, 2.421, 2.443, 1.06]
+        array_b = [0., 2.458, 2.166, 2.573, 2.488, 1.06]
         self.assertEqual(compare_arrays(array_a, array_b), True, 'x_points arrays are not equal')
         array_a = dev_obj.deviation_survey_obj.x_points.round(3)
-        array_b = [759587.934, 759615.942, 759644.761, 759673.608, 759701.302, 759714.999]
+        array_b = [759587.934, 759615.942, 759644.761, 759673.611, 759701.306, 759715.003]
         self.assertEqual(compare_arrays(array_a, array_b), True, 'y_points arrays are not equal')
         array_a = dev_obj.deviation_survey_obj.y_points.round(3)
-        array_b = [3311661.865, 3311713.121, 3311765.309, 3311818.593, 3311872.621, 3311899.849]
+        array_b = [3311661.865, 3311713.121, 3311765.309, 3311818.598, 3311872.627, 3311899.855]
         self.assertEqual(compare_arrays(array_a, array_b), True, 'latitude_points arrays are not equal')
         array_a = dev_obj.deviation_survey_obj.latitude_points.round(3)
         array_b = [29.908, 29.909, 29.909, 29.91 , 29.91 , 29.91 ]
